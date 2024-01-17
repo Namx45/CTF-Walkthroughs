@@ -1,0 +1,273 @@
+Bandit 0:
+Bandit0
+
+Bandit 1 - 21:
+You can find it on your own :P
+
+
+
+Bandit 22:
+WdDozAdTM2z9DiFEQ2mGlwngMfj4EZff
+cat /usr/bin/cronjob_bandit23.sh
+
+
+Bandit 23:
+
+QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G
+
+cat /usr/bin/cronjob_bandit24.sh
+man stat
+man timeout
+https://www.bogotobogo.com/Linux/linux_process_and_signals.php
+
+
+
+bandit23@bandit:/usr/bin$ cat cronjob_bandit24.sh; ll cronjob_bandit24.sh 
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+		# save user that is the owner of the (current) file
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+		# 
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+
+
+-rwxr-x--- 1 bandit24 bandit23 384 Feb 21 22:03 cronjob_bandit24.sh*
+
+
+
+
+answer:
+mkdir -p /tmp/bb/aa && touch /tmp/bb/aa/psw && chmod 777 -R /tmp/bb/
+
+echo -e "cat /etc/bandit_pass/bandit24 > /tmp/bb/aa/pwd" > /etc/bandit_pass/bandit24/s.sh
+
+cat /tmp/bb/aa/psw
+
+
+
+
+
+Bandit 24:
+
+VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar
+
+# -w 1 ==> close connection after 1 sec timeout or 1 sec of connection being idle (without recieving data)
+# could be done also like this:
+# tmp=$(echo $tmp | timeout -s 9 3 nc localhost 30002)
+# timeout excecutes a command for a given time (3 seconds this case)
+# -s 9 in the timeout command means send a os process kill signal
+
+
+#!/bin/bash
+
+for code in {0000..9999}; do
+  tmp="VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar "$code; echo $tmp
+  tmp=$(echo $tmp | nc -w 1 localhost 30002)
+  if [[ $tmp != *"Wrong"* ]]; then
+    echo $code" : Success"
+    exit 0
+  fi
+done
+
+
+
+Bandit 25:
+
+echo "VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar 0416" | nc localhost 30002
+p7TaowMYrmu23Ol8hiZh9UvD0O9hpx8d
+
+
+/bin/bash ---> type of shell
+shell ---> prog 
+more --->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bandit 26:
+ssh -i key bandit26@bandit.labs.overthewire.org -p 2220 '/bin/bash cat ~/text.txt'
+ssh -i key bandit26@localhost -p 2220 '/usr/bin/showtext'
+
+cat bandit26.sshkey 
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEApis2AuoooEqeYWamtwX2k5z9uU1Afl2F8VyXQqbv/LTrIwdW
+pTfaeRHXzr0Y0a5Oe3GB/+W2+PReif+bPZlzTY1XFwpk+DiHk1kmL0moEW8HJuT9
+/5XbnpjSzn0eEAfFax2OcopjrzVqdBJQerkj0puv3UXY07AskgkyD5XepwGAlJOG
+xZsMq1oZqQ0W29aBtfykuGie2bxroRjuAPrYM4o3MMmtlNE5fC4G9Ihq0eq73MDi
+1ze6d2jIGce873qxn308BA2qhRPJNEbnPev5gI+5tU+UxebW8KLbk0EhoXB953Ix
+3lgOIrT9Y6skRjsMSFmC6WN/O7ovu8QzGqxdywIDAQABAoIBAAaXoETtVT9GtpHW
+qLaKHgYtLEO1tOFOhInWyolyZgL4inuRRva3CIvVEWK6TcnDyIlNL4MfcerehwGi
+il4fQFvLR7E6UFcopvhJiSJHIcvPQ9FfNFR3dYcNOQ/IFvE73bEqMwSISPwiel6w
+e1DjF3C7jHaS1s9PJfWFN982aublL/yLbJP+ou3ifdljS7QzjWZA8NRiMwmBGPIh
+Yq8weR3jIVQl3ndEYxO7Cr/wXXebZwlP6CPZb67rBy0jg+366mxQbDZIwZYEaUME
+zY5izFclr/kKj4s7NTRkC76Yx+rTNP5+BX+JT+rgz5aoQq8ghMw43NYwxjXym/MX
+c8X8g0ECgYEA1crBUAR1gSkM+5mGjjoFLJKrFP+IhUHFh25qGI4Dcxxh1f3M53le
+wF1rkp5SJnHRFm9IW3gM1JoF0PQxI5aXHRGHphwPeKnsQ/xQBRWCeYpqTme9amJV
+tD3aDHkpIhYxkNxqol5gDCAt6tdFSxqPaNfdfsfaAOXiKGrQESUjIBcCgYEAxvmI
+2ROJsBXaiM4Iyg9hUpjZIn8TW2UlH76pojFG6/KBd1NcnW3fu0ZUU790wAu7QbbU
+i7pieeqCqSYcZsmkhnOvbdx54A6NNCR2btc+si6pDOe1jdsGdXISDRHFb9QxjZCj
+6xzWMNvb5n1yUb9w9nfN1PZzATfUsOV+Fy8CbG0CgYEAifkTLwfhqZyLk2huTSWm
+pzB0ltWfDpj22MNqVzR3h3d+sHLeJVjPzIe9396rF8KGdNsWsGlWpnJMZKDjgZsz
+JQBmMc6UMYRARVP1dIKANN4eY0FSHfEebHcqXLho0mXOUTXe37DWfZza5V9Oify3
+JquBd8uUptW1Ue41H4t/ErsCgYEArc5FYtF1QXIlfcDz3oUGz16itUZpgzlb71nd
+1cbTm8EupCwWR5I1j+IEQU+JTUQyI1nwWcnKwZI+5kBbKNJUu/mLsRyY/UXYxEZh
+ibrNklm94373kV1US/0DlZUDcQba7jz9Yp/C3dT/RlwoIw5mP3UxQCizFspNKOSe
+euPeaxUCgYEAntklXwBbokgdDup/u/3ms5Lb/bm22zDOCg2HrlWQCqKEkWkAO6R5
+/Wwyqhp/wTl8VXjxWo+W+DmewGdPHGQQ5fFdqgpuQpGUq24YZS8m66v5ANBwd76t
+IZdtF5HXs2S5CADTwniUS5mX1HO9l5gUkk+h0cH5JnPtsMCnAUM+BRY=
+-----END RSA PRIVATE KEY-----
+
+
+cat /etc/passwd | grep -i "bandit26"
+cat /usr/bin/showtext
+
+#!/bin/sh
+export TERM=linux
+exec more ~/text.txt
+exit 0
+
+-------------------
+export command :
+-------------------
+
+
+# The $TERM is an environmental variable in Linux and Unix shell environments.
+  This variable defines the terminal type. In other words,
+  it sets the terminal type for which output is to be prepared.
+
+Linux console without GUI set $TERM value as follows: linux
+
+-------------------
+
+
+-------------------
+exec command :
+-------------------
+The exec family of functions replaces the current running process
+with a new process. It can be used to run a C program by using another C program.
+
+
+in what programming language used for bash commands --> Written in	C
+-------------------
+
+# Solution :
+-------------
+~ Enter bandit25 & grep band26 from /etc/passwd
+~ Found that the shell bandit26 was using is /usr/bin/showtext
+~ cat /usr/bin/showtext revealed that its a script that does
+  the more command on ~/text.txt in bandit26 permissions
+ 
+ 
+	$ Note : From the (script) of bandit26 default shell we understand
+	  that we need to escape the more command somehow. but we get kicked 
+	  instantly. For a long time i used '' in the end of the ssh commdand
+	  to loging to bandit26 & it worked but it never got me the more shell.
+	  
+	  You can regognize the more gui when the terminal size is too small.
+	  try opening a large text file with the more command + resizing the
+	  Terminal size to a very small one and see bottom left the more gui %.
+	  
+	  I realised that the answer lies in the features of the more command
+	  and after an attempt in my own host with the more command i realised
+	  that there was a help menu (when pressing h inside the more mode).
+	  
+	  using the help menu achieved shell access using either vi / !cmd more syntax
+	  
+	  when using ssh on the bandit26 user we get kicked out unless typing '' in the
+	  end of the ssh command. i got stuck in understanding how from there we achieve
+	  the more shell since we didnt get the more gui in the left bottom corner.
+	  
+	  the trick is resizing the terminal shell to force the 'more' command shell mode
+	  to act regularly & not exit since our screen size can fit perfectly the text 
+	  of the ~/text.txt file (inside bandit26 default shell script/home folder).
+	  
+	  source (7:54 - 9:06):
+	  https://youtu.be/gFh6iAGgzys?t=474
+	 
+~ resize the terminal size to very
+  small & login bandit26 via ssh
+  key in bandit25 home folder
+  
+~ type !ls & :!ls ==> didn't worked
+
+~ press v (to enter vim mode)
+~ :help ===> got vim help menu
+  ==> found command line commands help menu
+  ==> :help :quit ===> found file editing section
+  ==> :e {file} - edits another file
+  ==> :e /etc/bandit_pass/bandit26
+  
+c7GvcKlw9mC7aUQaPx7nwFstuAIBw1o1
+
+~ tried to login to bandit26 is usless since the
+  default shell of hes will result in us back in 
+  the more command mode
+  
+~ we need to find a way to excecute commands via vim
+  to do so just follow the video mentioned before.
+  
+~ found this:
+  https://superuser.com/questions/285500/how-to-run-unix-commands-from-within-vim
+  
+~ tried :!<cmd> and it didnt worked
+~ tried :shell & also didnt work (because of the default shell)
+~ followed the video in source
+  :set shell=/bin/bash
+  :shell
+
+Bandit 27:
+~ using the shell from the previous task
+~ ls
+~ ./bandit27-do 
+
+Run a command as another user.
+  Example: ./bandit27-do id
+  
+~ ./bandit27-do cat /etc/bandit_pass/bandit27
+
+YnQpBuifNMas1hcUFk70ZmqkhUU2EuaS
+
+
+
+
+Bandit 28:
+git config --local user.name bandit27-git
+
+git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
+
+mkdir /tmp/b27; cd /tmp/b27
+cd repo; cat README
+AVanL161y9rsbcJIsFHuw35rjaOM19nR
+
+
+
+
+bandit 29:

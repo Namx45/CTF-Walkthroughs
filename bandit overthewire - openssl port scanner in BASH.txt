@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# echhoing once to openssl terminates because of
+# \n of echo cmd resulting force quitting
+
+# could use the command 'timeout -9 <sec> <cmd>'
+# to force cmd process kill (-9) after x seconds. 
+
+# -n (check if string {IS NOT} empty)
+# -z (check if string {IS} empty)
+
+ports=()
+for i in {31000..32000}; do
+  msg=$(echo | openssl s_client localhost:$i 2>&1)
+  if [[ $msg != *"errno=111"* ]]; then
+    echo "found open ssl port at : {$i}"
+    echo $msg
+    ports+=($i)
+  fi
+echo "${ports[@]}"
+done
+
+# ports found : 
+# 31046 31518 31691 31790 31960
+# ssh key for bandit17 ^
