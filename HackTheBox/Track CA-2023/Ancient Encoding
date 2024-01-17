@@ -9,10 +9,22 @@ def encode(message):
 
 
 def decode(message):
+    # NOTE: int and long are the same since python 3.x
+
+
+    # to reverse the hex()
     message = int(message, 16)
-    msglen = message.bit_length()
+
+    # to reverse bytes_to_long()
+    # https://pycryptodome.readthedocs.io/en/latest/src/util/util.html#Crypto.Util.number.bytes_to_long
+    # the inverse of bytes_to_long is long_to_bytes()
+    # https://pycryptodome.readthedocs.io/en/latest/src/util/util.html#Crypto.Util.number.long_to_bytes
+    msglen = message.bit_length() # blocksize
     message = long_to_bytes(message, msglen).decode()
+    
+    # revert the base64 encoding (decode is used to handle bytes array which base64 operation handle) 
     return b64decode(message).decode()
+
 
 def main():
     #encoded_flag = encode(FLAG)
