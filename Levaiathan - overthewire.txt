@@ -1,0 +1,76 @@
+levaiathan0 : levaiathan0
+levaiathan0 -> levaiathan1 :
+	ls
+	ll
+	ll .backup/
+	cat .backup/
+	cat bookmarks.html | grep levaiathan1
+	cat bookmarks.html | grep -i levaiathan1
+	cat bookmarks.html | grep password
+	" the password for leviathan1 is PPIfmI1qsA"
+
+levaiathan1 -> levaiathan2 :
+	ls
+	ll check
+	strings check
+	strings check | grep -i password
+	strings check | grep -i password -A 5 -B 5
+	
+	secrf
+	love
+	password: 
+	/bin/sh
+	Wrong password, Good Bye ...
+	
+	xxd check
+
+	000011f0 -> 00001230 :
+	000011f0: 5589 e553 5183 ec20 65a1 1400 0000 8945  U..SQ.. e......E
+	00001200: f431 c0c7 45e0 7365 7800 c745 ed73 6563  .1..E.sex..E.sec
+	00001210: 7266 c745 f165 74c6 45f3 00c7 45e4 676f  rf.E.et.E...E.go
+	00001220: 6400 c745 e86c 6f76 65c6 45ec 0083 ec0c  d..E.love.E.....
+	00001230: 6808 a004 08e8 26fe ffff 83c4 10e8 2efe  h.....&.........
+	
+	./check
+	password is "sex"
+	
+	whoami
+	cat /etc/leviathan_pass/leviathan2
+	mEh5PNl10
+	
+levaiathan1 -> levaiathan2 :
+	ls
+	ll
+	./printfile
+	
+	*** File Printer ***
+	Usage: ./printfile filename
+	
+	./printfile /etc/leviathan_pass/leviathan3
+	
+	./printfile /etc/leviathan_pass/leviathan3
+	You cant have that file...
+	
+	xxd printfile
+	00002010 -> 00002050 :
+	00002000: 0300 0000 0100 0200 2a2a 2a20 4669 6c65  ........*** File
+	00002010: 2050 7269 6e74 6572 202a 2a2a 0055 7361   Printer ***.Usa
+	00002020: 6765 3a20 2573 2066 696c 656e 616d 650a  ge: %s filename.
+	00002030: 0059 6f75 2063 616e 7420 6861 7665 2074  .You cant have t
+	00002040: 6861 7420 6669 6c65 2e2e 2e00 2f62 696e  hat file..../bin
+	00002050: 2f63 6174 2025 7300 011b 033b 2800 0000  /cat %s....;(...	
+	
+	
+		
+	
+	*** File Printer ***.
+	Usage: %s filename..You cant have that file..../bin/cat %s....;(..
+	
+	
+	levaiathan2 -> levaiathan3 :
+	
+
+	
+	
+
+	
