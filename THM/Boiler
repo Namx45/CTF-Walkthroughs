@@ -17,7 +17,13 @@ ssh
 ->
 What's running on port 10000?
 ->
-http
+webmin
+
+
+
+
+
+
 
 sudo nmap -p 21 --script=ftp-anon $(cat ip)            
 PORT   STATE SERVICE
@@ -36,6 +42,61 @@ File extension after anon login
 
 
 get .info.txt
+
+
+python -c 'import codecs;f=open(".info.txt","r");print(codecs.decode(f.read(), "rot_13"));f.close()'
+-> very funny :D
+Just wanted to see if you find it. Lol. Remember: Enumeration is the key!
+
+
+
+
+under ferox_scan found ==> joomla folder
+->
+What's CMS can you access?
+->
+joomla
+
+nano _files
+-> 
+VjJodmNITnBaU0JrWVdsemVRbz0K
+cat _files | base64 -d | base64 -d
+-> you honsely think your being funny xD
+Whopsie daisy
+
+
+
+
+to the browser !
+->
+/robots.txt
+->
+User-agent: *
+Disallow: /
+
+/tmp
+/.ssh
+/yellow
+/not
+/a+rabbit
+/hole
+/or
+/is
+/it
+
+079 084 108 105 077 068 089 050 077 071 078 107 079 084 086
+104 090 071 086 104 077 122 073 051 089 122 085 048 077 084 
+103 121 089 109 070 104 078 084 069 049 079 068 081 075
+
+->
+decimal to text converter
+->
+https://www.browserling.com/tools/decimal-to-text
+->
+OTliMDY2MGNkOTVhZGVhMzI3YzU0MTgyYmFhNTE1ODQK
+->
+base64 decode
+
 
 
 
