@@ -1,7 +1,7 @@
 export ctf='/home/kali/Desktop/thm/boiler'
 echo '10.10.75.92' > $ctf/ip
 
-next : nmap (OS / Port ver) + Ferox scans
+next : nmap (OS / Port ver) + web path scans
 
 21/tcp    open  ftp        vsftpd 3.0.3
 10000/tcp open  http       MiniServ 1.930 (Webmin httpd)
@@ -96,7 +96,67 @@ https://www.browserling.com/tools/decimal-to-text
 OTliMDY2MGNkOTVhZGVhMzI3YzU0MTgyYmFhNTE1ODQK
 ->
 base64 decode
+->
+99b0660cd95adea327c54182baa51584
+-> 
+MD5 - hashes.com
+-> 
+kidding
+->
+fuck you !!! >:(
 
+
+
+->
+ferox scan 
+->
+/joomla
+->
+gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt --url `cat ip`/joomla
+->
+
+
+
+┌──(kali㉿kali)-[~/Desktop/thm/boiler]
+└─$ gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt --url `cat ip`/joomla 
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.211.25/joomla
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/templates            (Status: 301) [Size: 323] [--> http://10.10.211.25/joomla/templates/]
+/media                (Status: 301) [Size: 319] [--> http://10.10.211.25/joomla/media/]
+/images               (Status: 301) [Size: 320] [--> http://10.10.211.25/joomla/images/]
+/modules              (Status: 301) [Size: 321] [--> http://10.10.211.25/joomla/modules/]
+/tests                (Status: 301) [Size: 319] [--> http://10.10.211.25/joomla/tests/]
+/bin                  (Status: 301) [Size: 317] [--> http://10.10.211.25/joomla/bin/]
+/plugins              (Status: 301) [Size: 321] [--> http://10.10.211.25/joomla/plugins/]
+/includes             (Status: 301) [Size: 322] [--> http://10.10.211.25/joomla/includes/]
+/language             (Status: 301) [Size: 322] [--> http://10.10.211.25/joomla/language/]
+/components           (Status: 301) [Size: 324] [--> http://10.10.211.25/joomla/components/]
+/cache                (Status: 301) [Size: 319] [--> http://10.10.211.25/joomla/cache/]
+/libraries            (Status: 301) [Size: 323] [--> http://10.10.211.25/joomla/libraries/]
+/installation         (Status: 301) [Size: 326] [--> http://10.10.211.25/joomla/installation/]
+/build                (Status: 301) [Size: 319] [--> http://10.10.211.25/joomla/build/]
+/tmp                  (Status: 301) [Size: 317] [--> http://10.10.211.25/joomla/tmp/]
+/layouts              (Status: 301) [Size: 321] [--> http://10.10.211.25/joomla/layouts/]
+/administrator        (Status: 301) [Size: 327] [--> http://10.10.211.25/joomla/administrator/]
+/cli                  (Status: 301) [Size: 317] [--> http://10.10.211.25/joomla/cli/]
+/_files               (Status: 301) [Size: 320] [--> http://10.10.211.25/joomla/_files/]
+Progress: 40282 / 220561 (18.26%)
+Progress: 220560 / 220561 (100.00%)
+===============================================================
+Finished
+==============================
 
 
 
