@@ -175,6 +175,7 @@ original_secret
 Sda6t0vkOPkM8YeOZkAGVhFoaplvlJFd
 
 
+
 lvl 10:
 -----------
 ->
@@ -183,11 +184,33 @@ lvl 10:
 D44EcsFkLxPIkAAKLosx8z3hxX1Z4MCE
 ->
 
+
+
+
 lvl 11:
 -----------
 ->
+view source code
 ->
+Output:
+<pre>
+<?
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    if(preg_match('/[;|&]/',$key)) {
+        print "Input contains an illegal character!";
+    } else {
+        passthru("grep -i $key dictionary.txt");
+    }
+}
+
 ->
+
 ->
 ->
 
