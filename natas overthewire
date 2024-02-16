@@ -158,20 +158,29 @@ if(array_key_exists("submit", $_POST)) {
 ?>
 
 ->
+encoded_secret = "3d3d516343746d4d6d6c315669563362"
 
+# Reverse process:
+# Step 1: Convert hex to binary
+binary_secret = bytes.fromhex(encoded_secret)
+
+# Step 2: Reverse the binary string
+reversed_binary_secret = binary_secret[::-1]
+
+# Step 3: Decode the base64 encoded string
+original_secret = reversed_binary_secret.decode('base64')
+
+original_secret
 ->
-->
-->
-->
+Sda6t0vkOPkM8YeOZkAGVhFoaplvlJFd
 
 
 lvl 10:
 -----------
-
 ->
+; cat /etc/natas_webpass/natas10 &&
 ->
-->
-->
+D44EcsFkLxPIkAAKLosx8z3hxX1Z4MCE
 ->
 
 lvl 11:
