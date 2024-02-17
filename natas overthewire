@@ -248,7 +248,90 @@ view page source
 ->
 visual code
 ->
+we want to create the cookie manualy by reversing xor
+to find the key. we will use the following schemes :
+a ^ b = c ==> the original xor
+c ^ b = a ==> to reverse a 
+c ^ a = b ==> to reverse b
+
+a = $defaultdata (after json) ==> array("showpassword"=>"no", "bgcolor"=>"#ffffff")
+b = the missing key which is '<censored>' in xor_encrypt()
+c = $_COOKIE['data'] ==> final result (o/ xored result)
+
+the reverse actions (or reverse a/b)
+c ^ a = b
+$_COOKIE['data'] ^ json_encode($defaultdata) = the missing $key
+
+once found the key all we needed is to generate the 
+corect cookie is to change the $defaultdata array
+to show the password or "showpassword"=>"yes"
 ->
+changed source code:
+<?php
+
+$defaultdata = array( "showpassword"=>"yes", "bgcolor"=>"#ffffff");
+
+function xor_encrypt($in) {
+    $key = 'KNHL';
+    $text = $in;
+    $outText = '';
+
+    // Iterate through each character
+    for($i=0;$i<strlen($text);$i++) {
+    $outText .= $text[$i] ^ $key[$i % strlen($key)];
+    }
+
+    return $outText;
+}
+
+function loadData($def) {
+    global $_COOKIE;
+    $mydata = $def;
+    if(array_key_exists("data", $_COOKIE)) {
+    $tempdata = json_decode(xor_encrypt(base64_decode($_COOKIE["data"])), true);
+    if(is_array($tempdata) && array_key_exists("showpassword", $tempdata) && array_key_exists("bgcolor", $tempdata)) {
+        if (preg_match('/^#(?:[a-f\d]{6})$/i', $tempdata['bgcolor'])) {
+        $mydata['showpassword'] = $tempdata['showpassword'];
+        $mydata['bgcolor'] = $tempdata['bgcolor'];
+        }
+    }
+    }
+    return $mydata;
+}
+
+function xor_decrypt($in) {  
+    $key = json_encode(array( "showpassword"=>"no", "bgcolor"=>"#ffffff"));
+    $text = $in; //cookie data
+    $outText = ''; // key
+
+    // Iterate through each character
+    for($i=0;$i<strlen($text);$i++) {
+    $outText .= $text[$i] ^ $key[$i % strlen($key)];
+    }
+
+    echo $outText;
+}
+
+
+function saveData($d) {
+    //setcookie("data", base64_encode(xor_encrypt(json_encode($d))));
+    echo base64_encode(xor_encrypt(json_encode($d)));
+}
+
+$data = loadData($defaultdata);
+
+if(array_key_exists("bgcolor",$_REQUEST)) {
+    if (preg_match('/^#(?:[a-f\d]{6})$/i', $_REQUEST['bgcolor'])) {
+        $data['bgcolor'] = $_REQUEST['bgcolor'];
+    }
+}
+
+saveData($data);
+echo xor_decrypt(base64_decode('MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY%3D'));
+?>
+
+->
+YWqo0pjpcXzSIl5NMAVxg12QxeC1w9QG
 
 lvl 13:
 -----------
