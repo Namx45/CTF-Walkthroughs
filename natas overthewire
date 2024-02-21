@@ -335,11 +335,95 @@ YWqo0pjpcXzSIl5NMAVxg12QxeC1w9QG
 
 lvl 13:
 -----------
+->
+view source code
+->
+<?php
 
+function genRandomString() {
+    $length = 10;
+    $characters = "0123456789abcdefghijklmnopqrstuvwxyz";
+    $string = "";
+
+    for ($p = 0; $p < $length; $p++) {
+        $string .= $characters[mt_rand(0, strlen($characters)-1)];
+    }
+
+    return $string;
+}
+
+function makeRandomPath($dir, $ext) {
+    do {
+    $path = $dir."/".genRandomString().".".$ext;
+    } while(file_exists($path));
+    return $path;
+}
+
+function makeRandomPathFromFilename($dir, $fn) {
+    $ext = pathinfo($fn, PATHINFO_EXTENSION);
+    return makeRandomPath($dir, $ext);
+}
+
+if(array_key_exists("filename", $_POST)) {
+    $target_path = makeRandomPathFromFilename("upload", $_POST["filename"]);
+
+
+        if(filesize($_FILES['uploadedfile']['tmp_name']) > 1000) {
+        echo "File is too big";
+    } else {
+        if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+            echo "The file <a href=\"$target_path\">$target_path</a> has been uploaded";
+        } else{
+            echo "There was an error uploading the file, please try again!";
+        }
+    }
+} else {
+?>
 ->
+the code does the following:
+# strip the extention from $_FILES['filename'] ===> $ext
+# create a random 10 character path name ==> genRandomString() ==> $target_path
+# rename/move the uploaded file to upload/10_random_chars.ext ==> move_uploaded_file($uploaded, $target_path
 ->
+looking at the upload post request
 ->
+POST /index.php HTTP/1.1
+Host: natas12.natas.labs.overthewire.org
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+....
+Content-Type: multipart/form-data; boundary=---------------------------308372928210774545253016154812
+
+-----------------------------308372928210774545253016154812
+Content-Disposition: form-data; name="MAX_FILE_SIZE"
+
+1000
+-----------------------------308372928210774545253016154812
+Content-Disposition: form-data; name="filename"
+
+fzefz3rmv7.jpg
+-----------------------------308372928210774545253016154812
+Content-Disposition: form-data; name="uploadedfile"; filename="new_file.txt"
+Content-Type: text/plain
+
+line1
+line2
+
+-----------------------------308372928210774545253016154812--
 ->
+boundary=---------------------------308372928210774545253016154812
+
+name="filename"
+fzefz3rmv7.jpg
+
+name="uploadedfile"; filename="new_file.txt"
+temp data
+->
+what we need to do to upload a reverse shell:
+# change the lines attached to 'new_file.txt' ==> to have reverse shell
+# change the extention of 'filename' ==> to be php ==> so the rev shell will work
+# forward the message
+->
+lW3jYRI02ZKDBb8VtQBU1f6eDRo6WEj9
 ->
 
 lvl 14:
