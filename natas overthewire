@@ -523,6 +523,23 @@ find user name min & max lenghs
 7 letters exists
 ....
 users with 3, 5 & 7 letters exist
+->
+created a script that using another sqli
+and subquery i guess each and each character
+of existing rows in database
+->
+the script found 3 users:
+bob (3)
+alice (5)
+charlie (7)
+->
+add db_enum_users.py here
+->
+got infinite loop when tried to enumerate password column
+W.I.P db_enum_pass.py
+->
+->
+
 
 lvl 17:
 -----------
