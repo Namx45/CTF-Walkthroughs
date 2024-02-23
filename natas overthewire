@@ -538,6 +538,7 @@ add db_enum_users.py here
 got infinite loop when tried to enumerate password column
 W.I.P db_enum_pass.py
 ->
+charlie" and password='hlwugkts2w';# ==> user exists
 ->
 
 
