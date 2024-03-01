@@ -1,0 +1,20 @@
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.53 ((Debian))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+http://`cat ip` ---> login page
+
+source code --->   
+<!-- use guest:guest credentials until registration is fixed. "admin" user account is off limits!!!!! -->
+
+
+guest : guest
+
+http://IP/profile.php?user=guest
+
+---> 
+user = admin
+
+---> 
+flag{66be95c478473d91a5358f2440c7af1f}
