@@ -81,6 +81,14 @@ sudo cat /root/root.txt
 101101ddc16b0cdf65ba0b8a7af7afa5
 
 
+
+some techniques i found along the way
+such as bypass extention filtering
+and more tools beside davtest
+
+https://book.hacktricks.xyz/network-services-pentesting/pentesting-web/put-method-webdav
+
+
   thanks for reading & happy hacking :)
 
 
