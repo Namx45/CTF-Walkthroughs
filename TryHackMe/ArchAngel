@@ -27,6 +27,14 @@ nano /etc/hosts
 
 
 
+if for some reason the fucking Firefox enforces https 
+even if you wrote http in the url use this
+https://stackoverflow.com/a/64408394
+
+
+
+
+
 in http://mafialive.thm
 -> thm{f0und_th3_r1ght_h0st_n4m3} 
 -> :D
