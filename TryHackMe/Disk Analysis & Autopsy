@@ -1,0 +1,114 @@
+xfreerdp /u:administrator /p:letmein123! /v:10.10.92.143
+Solution : https://www.linuxquestions.org/questions/linux-networking-3/failed-to-connect-credssp-required-by-server-4175611983/
+rdesktop didn't work for some reason...
+
+-> Autopsy 
+-> Load .aut file in "case files" folder
+
+
+
+
+
+# what is the MD5 of the IMAGE file ?
+METHOD 1:
+==========
+-> HASAN02.E01.txt 
+-> md5 in the end
+
+
+METHOD 2:
+==========
+-> in AutoPSY
+-> Data Sources
+-> HASAN01.E01
+-> File metadata
+
+
+
+
+
+# What is the computer account name?
+-> Operating system information
+-> SYSTEM -> Name
+
+
+
+
+# List all the user accounts. (alphabetical order)
+-> Operating system user accounts
+-> sort by "Name"
+-> copy everyone without default / disabled users
+
+
+
+# Who was the last user to log into the computer?
+-> Operating system user accounts
+-> sort by "Date accessed" (twice to sort backwards)
+
+
+
+# What was the IP address of the computer?
+-> Operating system information
+-> SYSTEM
+-> Application
+-> ControlSet001 -> Services -> TcpIP -> Parameters -> Interfaces
+-> it sais DHCP IP Address 0.0.0.0
+-> watched a walkthrough and it said to try 2 things :
+   -> look for hosts file ( c:\Windows\System32\Drivers\etc\hosts ) 
+   -> look for an app that handles networking (in program files, etc)
+->  Data Sources -> HASAN2.E01 -> find volumes of exFAT/NTFS (windows filesystem formating)
+-> vol2 is boot (looking at files), vol3 it is
+-> found Look@Lan in Program Files (x86)
+-> irunin.ini -> text view -> strings
+-> %LANIP%=192.168.130.216
+
+-> NOTE: Autopsy creates a registry reports via tool called Regripper
+-> NOTE: This requires "Injest module"
+-> refrences:
+   IP via Registry : https://youtu.be/JVQmJIw5a4Q?si=jLqA5KqLl4snxhzE&t=628
+   Walkthrough : https://youtu.be/kjDKgdoFufo?si=0_MTQy7Jej3kNUJ2&t=528
+   Forum : https://superuser.com/questions/1338775/where-is-ip-address-of-my-ethernet-settings-stored-in-registry
+
+
+
+
+
+
+# What was the MAC address of the computer? (XX-XX-XX-XX-XX-XX)
+-> following the previous step we found
+->
+
+
+
+#
+->
+->
+
+
+
+#
+->
+->
+
+
+#
+->
+->
+
+
+#
+->
+->
+
+
+
+
+
+
+
+
+
+
+
+
+
