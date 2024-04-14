@@ -662,8 +662,50 @@ print(record_enum("password", [10, 32]))
 
 
 
+
+
 lvl 17:
 -----------
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    if(preg_match('/[;|&`\'"]/',$key)) {
+        print "Input contains an illegal character!";
+    } else {
+        passthru("grep -i \"$key\" dictionary.txt");
+    }
+}
+
+http://natas16.natas.labs.overthewire.org/?needle=bitch&submit=Search
+
+bitch
+bitch's
+bitched
+bitches
+bitching
+
+
+
+# https://bugs.php.net/bug.php?id=69274
+http://natas16.natas.labs.overthewire.org/?needle[.]='ls'&submit=Search
+
+Warning:  preg_match() expects parameter 2 to be string, array given in /var/www/natas/natas16/index.php on line 31
+
+
+failes:
+http://natas16.natas.labs.overthewire.org/?needle=%0a'ls'&submit=Search
+http://natas16.natas.labs.overthewire.org/?needle[.]='ls'&submit=Search
+http://natas16.natas.labs.overthewire.org/?needle[0]='ls'&submit=Search
+http://natas16.natas.labs.overthewire.org/?needle[0]=`ls`&submit=Search
+http://natas16.natas.labs.overthewire.org/?needle=test[0]&test[0]='ls'&submit=Search
+
+
+
+
 
 
 lvl 18:
