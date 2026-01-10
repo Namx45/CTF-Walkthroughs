@@ -238,47 +238,69 @@ Cookies are protected with XOR encryption
 ->
 enter burp + refresh
 ->
-Cookies are protected with XOR encryption
-->
-Cookie: data=MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY%3D
-%3D in URL Encoding is '='
-https://www.w3schools.com/tags/ref_urlencode.ASP
-->
-echo "MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY=" | base64 -d
-0l;$$98-8=?#9*jvi 'ngl*+(!$#9lrnh(.*-(.n6
-->
-https://www.rapidtables.com/convert/number/ascii-to-hex.html
+Cookie: data=HmYkBwozJw4WNyAAFyB1VUcqOE1JZjUIBis7ABdmbU1GIjEJAyIxTRg%3D
+%3D in URL Encoding is = meaning data is a base64 string
+decodign it reveals bulshit meaning it as sayd by the challenge is encrypted somehow with XOR
 
+what else we see
+Background color: #ffffff
 ->
-view page source
+open the source code
+understand the code flow well
+please review the natas11.png before continuing
 ->
-visual code
-->
-we want to create the cookie manualy by reversing xor
-to find the key. we will use the following schemes :
-a ^ b = c ==> the original xor
-c ^ b = a ==> to reverse a 
-c ^ a = b ==> to reverse b
+now that we understand the code/encryption flow well
+we now know what we have to do to reverse the encryption.
 
-a = $defaultdata (after json) ==> array("showpassword"=>"no", "bgcolor"=>"#ffffff")
-b = the missing key which is '<censored>' in xor_encrypt()
-c = $_COOKIE['data'] ==> final result (o/ xored result)
+since we have the original data ($defaultdata) & the result of the XOR ($data in COOKIE)
+all we have to do is reverse the XOR the reveal the original encryption key. lets do so by reversing the xor_encrypt()
 
-the reverse actions (or reverse a/b)
-c ^ a = b
-$_COOKIE['data'] ^ json_encode($defaultdata) = the missing $key
-
-once found the key all we needed is to generate the 
-corect cookie is to change the $defaultdata array
-to show the password or "showpassword"=>"yes"
-->
-changed source code:
+--------------------------------------------------------------
 <?php
+function xor_decrypt() {
+    //$key = '<censored>';  // B
+    //$text = $in;          // A
+    //$outText = '';        // C
+    
+    // $outText --> $key (B)
+    $b = '';
+    
+    // $text --> base64_decode($data) (C)
+    $data = base64_decode('HmYkBwozJw4WNyAAFyB1VUcqOE1JZjUIBis7ABdmbU1GIjEJAyIxTRg=');
+    $c = $data;
+    
+    // $text --> (A)
+    $defaultdata = array( "showpassword"=>"no", "bgcolor"=>"#ffffff");
+    $a = json_encode($defaultdata);
 
-$defaultdata = array( "showpassword"=>"yes", "bgcolor"=>"#ffffff");
+    
+    // Iterate through each character
+    for($i=0;$i<strlen($c);$i++) {
+    $b .= $c[$i] ^ $a[$i % strlen($a)];
+    }
 
+    return $b;
+}
+
+echo xor_decrypt();
+?>
+--------------------------------------------------------------
+output is 'eDWoeDWoeDWoeDWoeDWoeDWoeDWoeDWoeDWoeDWoe' but the real answer is 'eDWo'
+
+im not some encryption expert but from verifying my answeres on some walkthroughs such as john hammonds and José Slon medium article
+this issue occurs when the $key is smaller in length from the plaintext secret by some binary XOR Math miracle.
+
+this is why this part "$i % strlen($key)" is so relevant in this line of code in xor_encrypt()
+""" $outText .= $text[$i] ^ $key[$i % strlen($key)]; """
+this is because we are looping over the binary value of $key over and over again (as the value is low)
+
+->
+so whats left is to craft our own cookie which will reveal the password and replace current
+cookie to force the natas12 password thus we will need:
+
+# first set the $key in place instead of "<censored>"
 function xor_encrypt($in) {
-    $key = 'KNHL';
+    $key = 'eDWo';
     $text = $in;
     $outText = '';
 
@@ -290,57 +312,17 @@ function xor_encrypt($in) {
     return $outText;
 }
 
-function loadData($def) {
-    global $_COOKIE;
-    $mydata = $def;
-    if(array_key_exists("data", $_COOKIE)) {
-    $tempdata = json_decode(xor_encrypt(base64_decode($_COOKIE["data"])), true);
-    if(is_array($tempdata) && array_key_exists("showpassword", $tempdata) && array_key_exists("bgcolor", $tempdata)) {
-        if (preg_match('/^#(?:[a-f\d]{6})$/i', $tempdata['bgcolor'])) {
-        $mydata['showpassword'] = $tempdata['showpassword'];
-        $mydata['bgcolor'] = $tempdata['bgcolor'];
-        }
-    }
-    }
-    return $mydata;
-}
+# secondly we will have to craft the cookie so
+  lets take the code from saveData() and change it abit
 
-function xor_decrypt($in) {  
-    $key = json_encode(array( "showpassword"=>"no", "bgcolor"=>"#ffffff"));
-    $text = $in; //cookie data
-    $outText = ''; // key
+  // note that we changed showpassword
+  $d = array("showpassword"=>"yes", "bgcolor"=>"#ffffff");
+  echo base64_encode(xor_encrypt(json_encode($d))); 
 
-    // Iterate through each character
-    for($i=0;$i<strlen($text);$i++) {
-    $outText .= $text[$i] ^ $key[$i % strlen($key)];
-    }
+change the data using burp or cookie editor, save, reload the page and viol`a 
+The password for natas12 is XXXXXXXX
 
-    echo $outText;
-}
-
-
-function saveData($d) {
-    //setcookie("data", base64_encode(xor_encrypt(json_encode($d))));
-    echo base64_encode(xor_encrypt(json_encode($d)));
-}
-
-$data = loadData($defaultdata);
-
-if(array_key_exists("bgcolor",$_REQUEST)) {
-    if (preg_match('/^#(?:[a-f\d]{6})$/i', $_REQUEST['bgcolor'])) {
-        $data['bgcolor'] = $_REQUEST['bgcolor'];
-    }
-}
-
-saveData($data);
-echo xor_decrypt(base64_decode('MGw7JCQ5OC04PT8jOSpqdmkgJ25nbCorKCEkIzlscm5oKC4qLSgubjY%3D'));
-?>
-
-->
-YWqo0pjpcXzSIl5NMAVxg12QxeC1w9QG
-
-
-
+like that didnt take a long time :D
 
 
 
